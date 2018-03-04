@@ -1,0 +1,33 @@
+{
+	"name": "wait-element",
+	"description": "Detect the appearance of an element in the DOM",
+	"version": "0.0.0",
+	"license": "MIT",
+	"author": "1natsu <https://twitter.com/1natsu172>",
+	"contributors": ["1natsu <https://twitter.com/1natsu172>"],
+	"bugs": {
+    "url": "https://github.com/1natsu172/wait-element/issues",
+    "email": "1natsu172@users.noreply.github.com"
+	},
+	"repository": {
+    "type": "git",
+    "url": "https://github.com/1natsu172/wait-element"
+  },
+	"engines": {
+		"node": ">=4"
+	},
+	"scripts": {
+		"test": "xo && ava"
+	},
+	"files": [
+		"dist"
+	],
+	"main": "dist/index.js",
+	"homepage": "https://github.com/1natsu172/wait-element",
+	"keywords": ["DOM", "MutationObserver", "Promise", "querySelector"],
+	"dependencies": {},
+	"devDependencies": {
+		"ava": "^0.20.0",
+		"xo": "^0.18.2"
+	}
+}
