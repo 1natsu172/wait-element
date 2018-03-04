@@ -44,10 +44,8 @@
 	"devDependencies": {
 		"ava": "^0.20.0",
 		"browser-env": "^3.2.5",
-		"eslint": "^4.18.2",
 		"husky": "^0.14.3",
 		"lint-staged": "^7.0.0",
-		"prettier": "^1.11.1",
 		"webpack": "^4.0.1",
 		"xo": "^0.18.2"
 	}
