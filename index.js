@@ -7,7 +7,7 @@ const checkElement = (selector) => {
 module.exports = (selector, options) => {
   options = Object.assign({
     target: document,
-    timer: 0
+    timeout: 0
   }, options)
 
   return new Promise((resolve, reject) => {
@@ -32,7 +32,7 @@ module.exports = (selector, options) => {
 
         if (element) {
           hasDetected = true
-          if (options.timer > 0) {
+          if (options.timeout > 0) {
             clearTimeout(timeoutId)
           }
           observer.disconnect()
@@ -45,14 +45,14 @@ module.exports = (selector, options) => {
     // Start observe.
     observer.observe(options.target, configs)
 
-    // Set timer.
-    if (options.timer > 0 && !hasDetected) {
+    // Set timeout.
+    if (options.timeout > 0 && !hasDetected) {
       timeoutId = setTimeout(() => {
         if (!hasDetected) {
           observer.disconnect()
           reject(new Error(`Element was not found: ${selector}`))
         }
-      }, options.timer)
+      }, options.timeout)
     }
   })
 }
