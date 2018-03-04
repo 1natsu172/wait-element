@@ -30,7 +30,15 @@
 		"DOM",
 		"MutationObserver",
 		"Promise",
-		"querySelector"
+		"element",
+		"selector",
+		"querySelector",
+		"detect",
+		"wait",
+		"await",
+		"check",
+		"exist",
+		"appearance"
 	],
 	"dependencies": {},
 	"devDependencies": {
