@@ -86,7 +86,6 @@
 		"babel-plugin-external-helpers": "^6.22.0",
 		"babel-plugin-transform-object-assign": "^6.22.0",
 		"babel-preset-env": "^1.6.1",
-		"browser-env": "^3.2.5",
 		"delay": "^2.0.0",
 		"husky": "^0.14.3",
 		"jsdom": "^11.6.2",
@@ -96,7 +95,6 @@
 		"rollup-plugin-babel": "^3.0.3",
 		"rollup-plugin-commonjs": "^8.3.0",
 		"rollup-plugin-node-resolve": "^3.0.3",
-		"webpack": "^4.0.1",
 		"xo": "^0.18.2"
 	}
 }
