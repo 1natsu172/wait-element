@@ -1,14 +1,14 @@
 'use strict';
 
-const checkElement = selector => {
-	return document.querySelector(selector);
-};
-
 module.exports = (selector, options) => {
 	options = Object.assign({
 		target: document,
 		timeout: 0
 	}, options);
+
+	const checkElement = selector => {
+		return options.target.querySelector(selector);
+	};
 
 	return new Promise((resolve, reject) => {
 		let hasDetected = false;
