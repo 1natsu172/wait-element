@@ -3,9 +3,9 @@
 	"description": "Detect the appearance of an element in the browser DOM",
 	"version": "0.0.0",
 	"license": "MIT",
-	"author": "1natsu <https://twitter.com/1natsu172>",
+	"author": "1natsu",
 	"contributors": [
-		"1natsu <https://twitter.com/1natsu172>"
+		"1natsu"
 	],
 	"bugs": {
 		"url": "https://github.com/1natsu172/wait-element/issues",
@@ -17,6 +17,24 @@
 	},
 	"engines": {
 		"node": ">=4"
+	},
+	"browserslist": [
+		"last 2 versions",
+		"not dead"
+	],
+	"babel": {
+		"presets": [
+			[
+				"env",
+				{
+					"modules": false
+				}
+			]
+		],
+		"plugins": [
+			"external-helpers",
+			"transform-object-assign"
+		]
 	},
 	"scripts": {
 		"test": "xo && ava"
@@ -43,9 +61,16 @@
 	"dependencies": {},
 	"devDependencies": {
 		"ava": "^0.20.0",
+		"babel-plugin-external-helpers": "^6.22.0",
+		"babel-plugin-transform-object-assign": "^6.22.0",
+		"babel-preset-env": "^1.6.1",
 		"browser-env": "^3.2.5",
 		"husky": "^0.14.3",
 		"lint-staged": "^7.0.0",
+		"rollup": "^0.56.3",
+		"rollup-plugin-babel": "^3.0.3",
+		"rollup-plugin-commonjs": "^8.3.0",
+		"rollup-plugin-node-resolve": "^3.0.3",
 		"webpack": "^4.0.1",
 		"xo": "^0.18.2"
 	}
