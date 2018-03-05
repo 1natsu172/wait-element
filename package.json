@@ -37,7 +37,19 @@
 		]
 	},
 	"scripts": {
-		"test": "xo && ava"
+		"test": "xo && ava",
+		"build": "rollup -c"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*.{js}": [
+			"xo --fix --prettier && ava",
+			"git add"
+		]
 	},
 	"files": [
 		"dist"
