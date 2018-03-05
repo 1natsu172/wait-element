@@ -40,6 +40,12 @@
 		"test": "xo && ava",
 		"build": "rollup -c"
 	},
+	"xo" : {
+		"envs": [
+			"node",
+			"browser"
+		]
+	},
 	"husky": {
 		"hooks": {
 			"pre-commit": "lint-staged"
