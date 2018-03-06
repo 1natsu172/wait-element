@@ -14,14 +14,14 @@ If the target element already exists when execution of "wait-element", it immedi
 ## Install
 
 ```bash
-$ npm install wait-element
+$ npm install @1natsu/wait-element
 ```
 
 
 ## Usage
 
 ```js
-const waitElement = require('wait-element');
+const waitElement = require('@1natsu/wait-element');
 
 (async () => {
   const el = await waitElement('.late-comming');

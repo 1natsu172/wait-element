@@ -1,10 +1,7 @@
 {
-	"name": "wait-element",
+	"name": "@1natsu/wait-element",
 	"description": "Detect the appearance of an element in the browser DOM",
 	"version": "0.0.0",
-	"publishConfig": {
-		"access": "public"
-	},
 	"license": "MIT",
 	"author": "1natsu",
 	"contributors": [
