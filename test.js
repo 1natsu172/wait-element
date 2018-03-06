@@ -78,7 +78,7 @@ test('Detect if an element can be found within the time limit', async t => {
 	t.is(checkEl.id, 'late');
 });
 
-test('Timeout if an element is not found within specified time', async t => {
+test.serial('Timeout if an element is not found within specified time', async t => {
 	delay(800).then(() => {
 		const el = document.createElement('div');
 		el.id = 'late';
