@@ -22,6 +22,17 @@ test('Detect the appearance of an element by id-selector', async t => {
 	t.is(checkEl.id, 'late');
 });
 
+test('Detect the appearance of an element by class-selector', async t => {
+	delay(500).then(() => {
+		const el = document.createElement('div');
+		el.className = 'late-comming';
+		document.body.appendChild(el);
+	});
+
+	const checkEl = await m('.late-comming');
+	t.is(checkEl.className, 'late-comming');
+});
+
 test('Check when an element already exists', async t => {
 	const el = document.createElement('div');
 	el.id = 'exist';
@@ -54,4 +65,27 @@ test('Detect elements of the same selector on each parent target', async t => {
 
 	const checkEl2 = await m('.late-comming', {target: target2});
 	t.is(checkEl2.id, 'late2');
+});
+
+test('Detect if an element can be found within the time limit', async t => {
+	delay(500).then(() => {
+		const el = document.createElement('div');
+		el.id = 'late';
+		document.body.appendChild(el);
+	});
+
+	const checkEl = await m('#late', {timeout: 800});
+	t.is(checkEl.id, 'late');
+});
+
+test('Timeout if an element is not found within specified time', async t => {
+	delay(800).then(() => {
+		const el = document.createElement('div');
+		el.id = 'late';
+		document.body.appendChild(el);
+	});
+
+	const waitingEl = '#late';
+	const timeoutEl = await t.throws(m(waitingEl, {timeout: 500}));
+	t.is(timeoutEl.message, `Element was not found: ${waitingEl}`);
 });
