@@ -17,8 +17,9 @@ If the target element already exists when execution of "wait-element", it immedi
 $ npm install @1natsu/wait-element
 ```
 
-
 ## Usage
+
+### Basically
 
 ```js
 const waitElement = require('@1natsu/wait-element');
@@ -28,16 +29,22 @@ const waitElement = require('@1natsu/wait-element');
   console.log(el);
   //=> example: "<div class="late-comming">I'm late</div>"
 })();
+```
 
-// When specify a parent element (specify MutationObserve target)
+### When specify a parent element (specify MutationObserve target)
+
+```js
 (async () => {
   const parent = await waitElement('#parent');
   const el = await waitElement('.late-comming', { target: parent });
   console.log(el);
   //=> example: "<div class="late-comming">I'm late</div>"
 })();
+```
 
-// When setting timeout
+### When setting timeout
+
+```js
 (async () => {
   const el = await waitElement('.late-comming', { timeout: 5000 }).catch(err => console.log(err));
   console.log(el);
@@ -45,7 +52,6 @@ const waitElement = require('@1natsu/wait-element');
   //=> If timeouted: Error: Element was not found: '.late-coming'
 })();
 ```
-
 
 ## API
 
