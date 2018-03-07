@@ -89,4 +89,4 @@ The very similar library.
 
 ## License
 
-MIT © [1natsu172](https://github.com/https://github.com/1natsu172)
+MIT © [1natsu172](https://github.com/1natsu172)
