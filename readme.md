@@ -19,11 +19,21 @@ $ npm install @1natsu/wait-element
 
 ## Usage
 
-### Basically
+### Module specifiers
 
 ```js
-const waitElement = require('@1natsu/wait-element');
+// ES
+import waitElement from '@1natsu/wait-element';
 
+// CJS
+const waitElement = require('@1natsu/wait-element');
+// In some cases this
+const waitElement = require('@1natsu/wait-element').default;
+```
+
+#### Basically
+
+```js
 (async () => {
   const el = await waitElement('.late-comming');
   console.log(el);
@@ -31,7 +41,7 @@ const waitElement = require('@1natsu/wait-element');
 })();
 ```
 
-### When specify a parent element (specify MutationObserve target)
+#### When specify a parent element (specify MutationObserve target)
 
 ```js
 (async () => {
@@ -42,7 +52,7 @@ const waitElement = require('@1natsu/wait-element');
 })();
 ```
 
-### When setting timeout
+#### When setting timeout
 
 ```js
 (async () => {
