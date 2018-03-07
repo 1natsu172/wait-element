@@ -41,6 +41,8 @@
 	},
 	"scripts": {
 		"test": "xo && ava",
+		"clean": "shx rm -rf dist",
+		"prebuild": "npm run clean",
 		"build": "rollup -c"
 	},
 	"xo": {
@@ -98,6 +100,7 @@
 		"rollup-plugin-babel": "^3.0.3",
 		"rollup-plugin-commonjs": "^8.3.0",
 		"rollup-plugin-node-resolve": "^3.0.3",
+		"shx": "^0.2.2",
 		"xo": "^0.18.2"
 	}
 }
