@@ -19,7 +19,7 @@
 		"url": "https://github.com/1natsu172/wait-element"
 	},
 	"engines": {
-		"node": ">=4"
+		"node": ">=6"
 	},
 	"browserslist": [
 		"last 2 versions",
