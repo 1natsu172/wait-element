@@ -98,6 +98,7 @@
 		"jsdom": "^11.6.2",
 		"lint-staged": "^7.0.0",
 		"mutationobserver-shim": "^0.3.2",
+		"p-cancelable": "^0.4.0",
 		"rollup": "^0.56.3",
 		"rollup-plugin-babel": "^3.0.3",
 		"rollup-plugin-commonjs": "^8.3.0",
