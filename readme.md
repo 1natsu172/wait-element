@@ -1,4 +1,4 @@
-# wait-element [![Build Status](https://travis-ci.org/https://github.com/1natsu172/wait-element.svg?branch=master)](https://travis-ci.org/https://github.com/1natsu172/wait-element)
+# wait-element [![Build Status](https://travis-ci.org/1natsu172/wait-element.svg?branch=master)](https://travis-ci.org/1natsu172/wait-element)
 
 > Detect the appearance of an element in the browser DOM
 
