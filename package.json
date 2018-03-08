@@ -35,7 +35,6 @@
 			]
 		],
 		"plugins": [
-			"external-helpers",
 			"transform-object-assign"
 		]
 	},
