@@ -87,7 +87,7 @@ test.serial('Timeout if an element is not found within specified time', async t 
 		const el = document.createElement('div');
 		el.id = 'late';
 		document.body.appendChild(el);
-	}).then(()=>{
+	}).then(() => {
 		t.is(timeoutEl.message, `Element was not found: ${waitingEl}`);
 	});
 });
