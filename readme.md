@@ -63,6 +63,22 @@ const waitElement = require('@1natsu/wait-element').default;
 })();
 ```
 
+#### When cancel wait-element
+
+```js
+(async () => {
+	let el;
+
+	try {
+		el = waitElement('.late-comming');
+
+		if (!isCondition) el.cancel();
+	} catch {
+		// some handling...
+	}
+})();
+```
+
 ## API
 
 ### waitElement(selector, [options])
@@ -94,6 +110,12 @@ Unit: ms(Millisecond)
 
 There is no timeout by default.
 
+### waitElementPromise#cancel()
+Type: `Function`
+
+Stop waiting for the element. Cancellation is synchronous.
+
+Based on [p-cancelable](https://github.com/sindresorhus/p-cancelable). Appreciate it.
 
 ## Similar
 
