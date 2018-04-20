@@ -67,7 +67,7 @@ const waitElement = require('@1natsu/wait-element').default;
 
 ```js
 (async () => {
-  let el;
+  let el;
 
   try {
     el = waitElement('.late-comming');
