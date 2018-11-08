@@ -25,17 +25,17 @@ declare module '@1natsu/wait-element' {
 	 */
 	declare function waitElement<K extends keyof HTMLElementTagNameMap>(
 		selector: K,
-		options?: waitElement.options
+		options?: waitElement.Options
 	): waitElement.CancelablePromise<HTMLElementTagNameMap[K] | null>
 
 	declare function waitElement<K extends keyof SVGElementTagNameMap>(
 		selector: K,
-		options?: waitElement.options
+		options?: waitElement.Options
 	): waitElement.CancelablePromise<SVGElementTagNameMap[K] | null>
 
 	declare function waitElement<E extends Element = Element>(
 		selector: string,
-		options?: waitElement.options
+		options?: waitElement.Options
 	): waitElement.CancelablePromise<E | null>
 
 	/**
@@ -47,12 +47,12 @@ declare module '@1natsu/wait-element' {
 		}
 
 		/**
+		 * Options
 		 *
 		 * @export
-		 * @interface options
-		 * @typedef {object}
+		 * @interface Options
 		 */
-		export interface options {
+		export interface Options {
 			target?: Node
 			timeout?: number
 		}
