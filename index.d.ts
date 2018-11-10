@@ -1,9 +1,8 @@
-declare module '@1natsu/wait-element' {
-	// Type definitions for "@1natsu/wait-element" v2.0.0
-	// Project: "@1natsu/wait-element"
-	// Definitions by: 1natsu <https://github.com/1natsu172>
+// Type definitions for "@1natsu/wait-element" v2.1.0
+// Project: "@1natsu/wait-element"
+// Definitions by: 1natsu <https://github.com/1natsu172>
 
-	/*~ Note that ES6 modules cannot directly export callable functions.
+/*~ Note that ES6 modules cannot directly export callable functions.
  *~ This file should be imported using the CommonJS-style:
  *~   import x = require('someLibrary');
  *~
@@ -11,17 +10,22 @@ declare module '@1natsu/wait-element' {
  *~ workarounds for this limitation of ES6 modules.
  */
 
-	/*~ This declaration specifies that the function
- *~ is the exported object from the file
+/**
+ * @see [GitHub Repo] {@link https://github.com/1natsu172/wait-element}
  */
+declare module '@1natsu/wait-element' {
+	/*~ This declaration specifies that the function
+	 *~ is the exported object from the file
+	 */
 	export = waitElement
 
-	/*~ multiple overloads for function */
+	/*~ multiple overloads function */
 	/**
+	 * Function
 	 *
-	 * @param selector
-	 * @param options
-	 * @param {string} [options.target] foo
+	 * @param {string} selector Format is [CSS-selector](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors)
+	 * @param {waitElement.Options} [options] waitElement.Options
+	 * @returns {(waitElement.CancelablePromise<HTMLElementTagNameMap[K] | SVGElementTagNameMap[K] | E | null>)} Overloaded by {selector} param
 	 */
 	declare function waitElement<K extends keyof HTMLElementTagNameMap>(
 		selector: K,
@@ -39,18 +43,24 @@ declare module '@1natsu/wait-element' {
 	): waitElement.CancelablePromise<E | null>
 
 	/**
-	 * namespace
+	 * @namespace waitElement
 	 */
 	declare namespace waitElement {
+		/**
+		 *
+		 * @interface CancelablePromise<T>
+		 * @extends {Promise<T>}
+		 * @property {function} cancel
+		 */
 		export interface CancelablePromise<T> extends Promise<T> {
 			cancel(): void
 		}
 
 		/**
-		 * Options
 		 *
-		 * @export
-		 * @interface Options
+		 * @property {Node} [Options.target] value is [Node](https://developer.mozilla.org/en-US/docs/Web/API/Node)
+		 * @property {number} [Options.timeout]
+		 * @typedef {object} Options
 		 */
 		export interface Options {
 			target?: Node
