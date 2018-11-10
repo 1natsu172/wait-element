@@ -1,4 +1,9 @@
-# wait-element [![Build Status](https://travis-ci.org/1natsu172/wait-element.svg?branch=master)](https://travis-ci.org/1natsu172/wait-element)
+# wait-element
+[![Travis (.org)](https://img.shields.io/travis/1natsu172/wait-element.svg?style=for-the-badge)](https://travis-ci.org/1natsu172/wait-element)
+[![npm](https://img.shields.io/npm/v/@1natsu/wait-element.svg?style=for-the-badge)](https://www.npmjs.com/package/@1natsu/wait-element)
+![npm bundle size (minified)](https://img.shields.io/bundlephobia/min/@1natsu/wait-element.svg?style=for-the-badge)
+![npm bundle size (minified + gzip)](https://img.shields.io/bundlephobia/minzip/@1natsu/wait-element.svg?style=for-the-badge)
+
 
 > Detect the appearance of an element in the browser DOM
 
