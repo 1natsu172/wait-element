@@ -27,17 +27,17 @@ declare module '@1natsu/wait-element' {
 	 * @param {waitElement.Options} [options] waitElement.Options
 	 * @returns {(waitElement.CancelablePromise<HTMLElementTagNameMap[K] | SVGElementTagNameMap[K] | E | null>)} Overloaded by {selector} param
 	 */
-	declare function waitElement<K extends keyof HTMLElementTagNameMap>(
+	function waitElement<K extends keyof HTMLElementTagNameMap>(
 		selector: K,
 		options?: waitElement.Options
 	): waitElement.CancelablePromise<HTMLElementTagNameMap[K] | null>
 
-	declare function waitElement<K extends keyof SVGElementTagNameMap>(
+	function waitElement<K extends keyof SVGElementTagNameMap>(
 		selector: K,
 		options?: waitElement.Options
 	): waitElement.CancelablePromise<SVGElementTagNameMap[K] | null>
 
-	declare function waitElement<E extends Element = Element>(
+	function waitElement<E extends Element = Element>(
 		selector: string,
 		options?: waitElement.Options
 	): waitElement.CancelablePromise<E | null>
@@ -45,7 +45,7 @@ declare module '@1natsu/wait-element' {
 	/**
 	 * @namespace waitElement
 	 */
-	declare namespace waitElement {
+	namespace waitElement {
 		/**
 		 *
 		 * @interface CancelablePromise<T>
