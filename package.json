@@ -25,19 +25,6 @@
 		"last 2 versions",
 		"not dead"
 	],
-	"babel": {
-		"presets": [
-			[
-				"@babel/preset-env",
-				{
-					"modules": false
-				}
-			]
-		],
-		"plugins": [
-			"@babel/plugin-transform-object-assign"
-		]
-	},
 	"scripts": {
 		"test": "xo && ava",
 		"clean": "shx rm -rf dist",
@@ -121,10 +108,10 @@
 		"jsdom": "^11.6.2",
 		"lint-staged": "^7.0.0",
 		"mutationobserver-shim": "^0.3.2",
-		"rollup": "^0.56.3",
-		"rollup-plugin-babel": "^3.0.3",
-		"rollup-plugin-commonjs": "^8.3.0",
-		"rollup-plugin-node-resolve": "^3.0.3",
+		"rollup": "^1.31.1",
+		"rollup-plugin-babel": "^4.3.3",
+		"@rollup/plugin-commonjs": "^11.0.2",
+		"@rollup/plugin-node-resolve": "^7.1.1",
 		"shx": "^0.2.2",
 		"xo": "^0.26.1"
 	}
