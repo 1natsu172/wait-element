@@ -1,30 +1,26 @@
-import commonjs from '@rollup/plugin-commonjs'
-import nodeResolve from '@rollup/plugin-node-resolve'
-import babel from 'rollup-plugin-babel'
+import commonjs from '@rollup/plugin-commonjs';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import babel from 'rollup-plugin-babel';
 
 export default {
 	input: 'index.js',
 	output: [
 		{
 			file: 'dist/cjs/index.js',
-			format: 'cjs',
+			format: 'cjs'
 		},
 		{
 			file: 'dist/es/index.js',
-			format: 'es',
-		},
-		{
-			file: 'dist/esm/index.js',
-			format: 'esm',
-		},
+			format: 'es'
+		}
 	],
 	plugins: [
 		nodeResolve({
-			mainFields: ['jsnext', 'module', 'main'],
+			mainFields: ['jsnext', 'module', 'main']
 		}),
 
 		commonjs({
-			sourceMap: false, // Default: true
+			sourceMap: false // Default: true
 		}),
 
 		babel({
@@ -32,14 +28,14 @@ export default {
 				[
 					'@babel/preset-env',
 					{
-						modules: false,
-					},
-				],
+						modules: false
+					}
+				]
 			],
 			plugins: [
 				'@babel/plugin-transform-object-assign',
-				'@babel/external-helpers',
-			],
-		}),
-	],
-}
+				'@babel/external-helpers'
+			]
+		})
+	]
+};
