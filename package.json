@@ -1,7 +1,7 @@
 {
 	"name": "@1natsu/wait-element",
 	"description": "Detect the appearance of an element in the browser DOM",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"publishConfig": {
 		"access": "public"
 	},
@@ -97,11 +97,13 @@
 	"devDependencies": {
 		"@ava/babel": "^1.0.1",
 		"@babel/core": "^7.8.4",
-		"@babel/polyfill": "7.8.3",
 		"@babel/plugin-external-helpers": "^7.8.3",
 		"@babel/plugin-transform-object-assign": "^7.8.3",
+		"@babel/polyfill": "7.8.3",
 		"@babel/preset-env": "^7.8.4",
 		"@babel/register": "^7.8.3",
+		"@rollup/plugin-commonjs": "^11.0.2",
+		"@rollup/plugin-node-resolve": "^7.1.1",
 		"ava": "^3.3.0",
 		"delay": "^2.0.0",
 		"husky": "^0.14.3",
@@ -110,8 +112,6 @@
 		"mutationobserver-shim": "^0.3.2",
 		"rollup": "^1.31.1",
 		"rollup-plugin-babel": "^4.3.3",
-		"@rollup/plugin-commonjs": "^11.0.2",
-		"@rollup/plugin-node-resolve": "^7.1.1",
 		"shx": "^0.2.2",
 		"xo": "^0.26.1"
 	}
