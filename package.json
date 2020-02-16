@@ -28,14 +28,14 @@
 	"babel": {
 		"presets": [
 			[
-				"env",
+				"@babel/preset-env",
 				{
 					"modules": false
 				}
 			]
 		],
 		"plugins": [
-			"transform-object-assign"
+			"@babel/plugin-transform-object-assign"
 		]
 	},
 	"scripts": {
@@ -43,6 +43,24 @@
 		"clean": "shx rm -rf dist",
 		"prebuild": "npm run clean",
 		"build": "rollup -c"
+	},
+	"ava": {
+		"babel": {
+			"testOptions": {
+				"plugins": [
+					"@babel/plugin-transform-object-assign"
+				],
+				"babelrc": false,
+				"configFile": false
+			}
+		},
+		"failFast": true,
+		"tap": false,
+		"verbose": true,
+		"require": [
+			"@babel/register",
+			"@babel/polyfill"
+		]
 	},
 	"xo": {
 		"envs": [
@@ -90,10 +108,14 @@
 		"p-cancelable": "^0.4.0"
 	},
 	"devDependencies": {
-		"ava": "^0.25.0",
-		"babel-plugin-external-helpers": "^6.22.0",
-		"babel-plugin-transform-object-assign": "^6.22.0",
-		"babel-preset-env": "^1.6.1",
+		"@ava/babel": "^1.0.1",
+		"@babel/core": "^7.8.4",
+		"@babel/polyfill": "7.8.3",
+		"@babel/plugin-external-helpers": "^7.8.3",
+		"@babel/plugin-transform-object-assign": "^7.8.3",
+		"@babel/preset-env": "^7.8.4",
+		"@babel/register": "^7.8.3",
+		"ava": "^3.3.0",
 		"delay": "^2.0.0",
 		"husky": "^0.14.3",
 		"jsdom": "^11.6.2",
@@ -104,6 +126,6 @@
 		"rollup-plugin-commonjs": "^8.3.0",
 		"rollup-plugin-node-resolve": "^3.0.3",
 		"shx": "^0.2.2",
-		"xo": "^0.18.2"
+		"xo": "^0.26.1"
 	}
 }
