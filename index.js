@@ -21,6 +21,7 @@ module.exports = (selector, options) => {
 			if (_timeoutId) {
 				clearTimeout(_timeoutId);
 			}
+
 			observer.disconnect();
 			_hasObserved = true;
 		});
@@ -30,7 +31,7 @@ module.exports = (selector, options) => {
 			subtree: true
 		};
 
-    // Checking already element existed.
+		// Checking already element existed.
 		const element = checkElement(selector);
 		if (element) {
 			_hasObserved = true;
@@ -45,6 +46,7 @@ module.exports = (selector, options) => {
 					if (_timeoutId) {
 						clearTimeout(_timeoutId);
 					}
+
 					observer.disconnect();
 					_hasObserved = true;
 					resolve(element);
@@ -55,10 +57,10 @@ module.exports = (selector, options) => {
 			});
 		});
 
-    // Start observe.
+		// Start observe.
 		observer.observe(options.target, configs);
 
-    // Set timeout.
+		// Set timeout.
 		if (options.timeout > 0 && !_hasObserved) {
 			_timeoutId = setTimeout(() => {
 				if (!_hasObserved) {
