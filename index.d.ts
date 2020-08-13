@@ -64,7 +64,7 @@ declare module '@1natsu/wait-element' {
 		 */
 		export interface Options {
 			target?: Node
-			visible?: boolean 
+			present?: boolean 
 			timeout?: number
 		}
 	}
