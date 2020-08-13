@@ -5,6 +5,7 @@ const PCancelable = require('p-cancelable');
 module.exports = (selector, options) => {
 	options = Object.assign({
 		target: document,
+		visible: true,
 		timeout: 0
 	}, options);
 
@@ -33,7 +34,7 @@ module.exports = (selector, options) => {
 
 		// Checking already element existed.
 		const element = checkElement(selector);
-		if (element) {
+		if (element === options.visible) {
 			_hasObserved = true;
 			return resolve(element);
 		}
@@ -42,7 +43,7 @@ module.exports = (selector, options) => {
 			mutations.some(() => {
 				const element = checkElement(selector);
 
-				if (element) {
+				if (element === options.visible) {
 					if (_timeoutId) {
 						clearTimeout(_timeoutId);
 					}
