@@ -107,6 +107,13 @@ When you know the parent node of the element you want to detect.
 
 * Please also refer to the [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver)
 
+##### present
+
+Type: `boolean`<br>
+Default: `true`<br>
+
+By default it wait for element to be present, if you set it to false it will wait until not present.
+
 ##### timeout
 
 Type: `number`<br>
