@@ -42,6 +42,18 @@ test('Check when an element already exists', async t => {
 	t.is(checkEl.id, 'exist');
 });
 
+test('Detect the target element by delayed add class name', async t => {
+	const el = document.createElement('div');
+	el.id = 'exist';
+	document.body.append(el);
+	const notDetectYet = document.querySelector('#exist.added');
+	t.is(notDetectYet, null);
+
+	document.querySelector('#exist').classList.add('added');
+	const checkEl = await m('#exist.added');
+	t.is(checkEl.id, 'exist');
+});
+
 test('Detect elements of the same selector on each parent target', async t => {
 	const target1 = document.createElement('p');
 	document.body.append(target1);

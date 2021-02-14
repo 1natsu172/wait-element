@@ -3,10 +3,23 @@
 const PCancelable = require('p-cancelable');
 
 module.exports = (selector, options) => {
-	options = Object.assign({
-		target: document,
-		timeout: 0
-	}, options);
+	const observeConfigs = Object.assign(
+		{
+			childList: true,
+			subtree: true,
+			attributes: true
+		},
+		options && options.observeConfigs
+	);
+
+	options = Object.assign(
+		{
+			target: document,
+			timeout: 0,
+			observeConfigs
+		},
+		options
+	);
 
 	const checkElement = selector => {
 		return options.target.querySelector(selector);
@@ -25,11 +38,6 @@ module.exports = (selector, options) => {
 			observer.disconnect();
 			_hasObserved = true;
 		});
-
-		const configs = {
-			childList: true,
-			subtree: true
-		};
 
 		// Checking already element existed.
 		const element = checkElement(selector);
@@ -58,7 +66,7 @@ module.exports = (selector, options) => {
 		});
 
 		// Start observe.
-		observer.observe(options.target, configs);
+		observer.observe(options.target, options.observeConfigs);
 
 		// Set timeout.
 		if (options.timeout > 0 && !_hasObserved) {
