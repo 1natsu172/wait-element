@@ -63,7 +63,7 @@
 		"format:src": "xo --fix --prettier ./src",
 		"clean": "shx rm -rf dist",
 		"prebuild": "npm run clean",
-		"build": "rollup -c"
+		"build": "esbuild ./src/index.ts --bundle --outfile=index.js"
 	},
 	"ava": {
 		"extensions": [
