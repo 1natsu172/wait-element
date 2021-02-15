@@ -123,6 +123,20 @@ Unit: ms(Millisecond)
 
 There is no timeout by default.
 
+##### observeConfigs
+
+Type: `MutationObserverInit`<br>
+Default:
+```
+{
+	childList: true,
+	subtree: true,
+	attributes: true,
+}
+```
+
+passed configs is merged with default configs.
+
 ### waitElement#cancel()
 Type: `Function`
 
