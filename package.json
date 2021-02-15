@@ -61,7 +61,7 @@
 		"xo": "^0.37.1"
 	},
 	"scripts": {
-		"test": "xo && ava",
+		"test": "xo --prettier && ava",
 		"format:src": "xo --fix --prettier ./src",
 		"clean": "shx rm -rf dist",
 		"prebuild": "npm run clean",
