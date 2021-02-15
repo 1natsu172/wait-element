@@ -1,9 +1,15 @@
 import PCancelable from 'p-cancelable'
-import { Options, defaultOptions, mergeOptions } from './options'
-import {DetectConditionMatcher,isAppeared,isDisappeared} from './detectConditions'
+import {Options, defaultOptions, mergeOptions} from './options'
+import {
+	DetectConditionMatcher,
+	isAppeared,
+	isDisappeared,
+} from './detectConditions'
 
-function createWaitElement<Result extends Element|null>(isMatchDetectCondition:DetectConditionMatcher<Result>) {
-	return function(
+function createWaitElement<Result extends Element | null>(
+	isMatchDetectCondition: DetectConditionMatcher<Result>,
+) {
+	return function (
 		selector: string,
 		_options?: Partial<Options>,
 	): PCancelable<Result> {
@@ -71,5 +77,5 @@ function createWaitElement<Result extends Element|null>(isMatchDetectCondition:D
 	}
 }
 
-export const waitElement  = createWaitElement(isAppeared)
-export const waitDisappearElement  = createWaitElement(isDisappeared)
+export const waitElement = createWaitElement(isAppeared)
+export const waitDisappearElement = createWaitElement(isDisappeared)

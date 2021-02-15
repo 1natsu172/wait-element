@@ -1,12 +1,10 @@
-import test, { beforeEach } from 'ava'
-import { JSDOM} from 'jsdom'
-import { isAppeared, isDisappeared } from './detectConditions'
-
+import test, {beforeEach} from 'ava'
+import {JSDOM} from 'jsdom'
+import {isAppeared, isDisappeared} from './detectConditions'
 
 beforeEach(() => {
 	global.document = new JSDOM().window.document
 })
-
 
 test('isAppeared: true', (t) => {
 	const result = isAppeared(document.createElement('a'))
