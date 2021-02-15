@@ -23,8 +23,7 @@
 		"not dead"
 	],
 	"files": [
-		"dist",
-		"index.d.ts"
+		"dist"
 	],
 	"type": "module",
 	"typings": "dist/types/index.d.ts",
