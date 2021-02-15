@@ -27,13 +27,7 @@ $ npm install @1natsu/wait-element
 ### Module specifiers
 
 ```js
-// ES
-import waitElement from '@1natsu/wait-element';
-
-// CJS
-const waitElement = require('@1natsu/wait-element');
-// In some cases this
-const waitElement = require('@1natsu/wait-element').default;
+import {waitElement, waitDisappearElement} from '@1natsu/wait-element';
 ```
 
 #### Basically
@@ -83,10 +77,24 @@ const waitElement = require('@1natsu/wait-element').default;
 })();
 ```
 
+#### Wait for the element to disappear
+
+```js
+(async () => {
+	const el = await waitDisappearElement('.will-disappear');
+	// disappeared the element from dom tree
+  console.log(el);
+  //=> example: null
+})();
+```
+
 
 ## API
 
 ### waitElement(selector, [options])
+### waitDisappearElement(selector, [options])
+
+`waitElement` & `waitDisappearElement` is same api. Difference is waiting element for appear or disappear.
 
 #### selector
 
@@ -115,7 +123,7 @@ Unit: ms(Millisecond)
 
 There is no timeout by default.
 
-### waitElementPromise#cancel()
+### waitElement#cancel()
 Type: `Function`
 
 Stop waiting for the element. Cancellation is synchronous.

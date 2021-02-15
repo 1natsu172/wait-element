@@ -18,64 +18,17 @@
 		"type": "git",
 		"url": "https://github.com/1natsu172/wait-element"
 	},
-	"engines": {
-		"node": ">=6"
-	},
 	"browserslist": [
 		"last 2 versions",
 		"not dead"
 	],
-	"scripts": {
-		"test": "xo && ava",
-		"clean": "shx rm -rf dist",
-		"prebuild": "npm run clean",
-		"build": "rollup -c"
-	},
-	"ava": {
-		"babel": {
-			"testOptions": {
-				"plugins": [
-					"@babel/plugin-transform-object-assign"
-				],
-				"babelrc": false,
-				"configFile": false
-			}
-		},
-		"failFast": true,
-		"tap": false,
-		"verbose": true,
-		"require": [
-			"@babel/register",
-			"@babel/polyfill"
-		]
-	},
-	"xo": {
-		"envs": [
-			"node",
-			"browser"
-		],
-		"rules": {
-			"import/no-unassigned-import": 0
-		}
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "lint-staged"
-		}
-	},
-	"lint-staged": {
-		"*.{js}": [
-			"xo --fix --prettier && ava",
-			"git add"
-		]
-	},
 	"files": [
 		"dist",
 		"index.d.ts"
 	],
-	"typings": "index.d.ts",
-	"module": "dist/es/index.js",
-	"main": "dist/cjs/index.js",
+	"type": "module",
+	"typings": "dist/types/index.d.ts",
+	"main": "dist/index.js",
 	"homepage": "https://github.com/1natsu172/wait-element",
 	"keywords": [
 		"DOM",
@@ -92,27 +45,51 @@
 		"appearance"
 	],
 	"dependencies": {
-		"p-cancelable": "^0.4.0"
+		"p-cancelable": "^2.0.0"
 	},
 	"devDependencies": {
-		"@ava/babel": "^1.0.1",
-		"@babel/core": "^7.8.4",
-		"@babel/plugin-external-helpers": "^7.8.3",
-		"@babel/plugin-transform-object-assign": "^7.8.3",
-		"@babel/polyfill": "7.8.3",
-		"@babel/preset-env": "^7.8.4",
-		"@babel/register": "^7.8.3",
-		"@rollup/plugin-commonjs": "^11.0.2",
-		"@rollup/plugin-node-resolve": "^7.1.1",
-		"ava": "^3.3.0",
-		"delay": "^2.0.0",
-		"husky": "^0.14.3",
-		"jsdom": "^11.6.2",
-		"lint-staged": "^7.0.0",
-		"mutationobserver-shim": "^0.3.2",
-		"rollup": "^1.31.1",
-		"rollup-plugin-babel": "^4.3.3",
-		"shx": "^0.2.2",
-		"xo": "^0.26.1"
+		"@types/jsdom": "^16.2.6",
+		"ava": "^3.15.0",
+		"delay": "^5.0.0",
+		"esbuild": "0.8.46",
+		"jsdom": "^16.4.0",
+		"mutationobserver-shim": "^0.3.7",
+		"shx": "^0.3.3",
+		"ts-node": "^9.1.1",
+		"typescript": "^4.1.5",
+		"xo": "^0.37.1"
+	},
+	"scripts": {
+		"test": "ava ./src/**/*",
+		"lint": "xo --prettier ./src/**/*",
+		"lint:format": "xo --fix --prettier ./src/**/*",
+		"clean": "shx rm -rf dist",
+		"prebuild": "npm run clean",
+		"build": "esbuild ./src/index.ts --bundle --format=esm --outdir=dist",
+		"postbuild": "tsc -p tsconfig.build.json"
+	},
+	"ava": {
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register"
+		],
+		"failFast": true,
+		"tap": false,
+		"verbose": true
+	},
+	"xo": {
+		"envs": [
+			"node",
+			"browser"
+		],
+		"rules": {
+			"import/no-unassigned-import": 0,
+			"@typescript-eslint/no-floating-promises": 0,
+			"@typescript-eslint/promise-function-async": 0,
+			"@typescript-eslint/consistent-indexed-object-style": 0,
+			"unicorn/filename-case": 0
+		}
 	}
 }
