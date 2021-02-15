@@ -27,8 +27,9 @@
 		"index.d.ts"
 	],
 	"typings": "index.d.ts",
-	"module": "dist/es/index.js",
-	"main": "dist/cjs/index.js",
+	"type": "module",
+	"module": "dist/index.js",
+	"main": "dist/index.js",
 	"homepage": "https://github.com/1natsu172/wait-element",
 	"keywords": [
 		"DOM",
@@ -45,28 +46,27 @@
 		"appearance"
 	],
 	"dependencies": {
-		"p-cancelable": "^2.0.0",
-		"deepmerge": "^4.2.2"
+		"p-cancelable": "^2.0.0"
 	},
 	"devDependencies": {
-		"@ava/typescript":"^1.1.1",
-		"@types/jsdom":"^16.2.6",
+		"@types/jsdom": "^16.2.6",
 		"ava": "^3.15.0",
 		"delay": "^5.0.0",
+		"esbuild": "0.8.46",
 		"jsdom": "^16.4.0",
 		"mutationobserver-shim": "^0.3.7",
 		"shx": "^0.3.3",
-		"xo": "^0.37.1",
+		"ts-node": "^9.1.1",
 		"typescript": "^4.1.5",
-		"esbuild": "0.8.46",
-		"ts-node": "^9.1.1"
+		"xo": "^0.37.1"
 	},
 	"scripts": {
 		"test": "xo && ava",
 		"format:src": "xo --fix --prettier ./src",
 		"clean": "shx rm -rf dist",
 		"prebuild": "npm run clean",
-		"build": "esbuild ./src/index.ts --bundle --outfile=index.js"
+		"build": "esbuild ./src/index.ts --bundle --format=esm --outdir=dist",
+		"postbuild": "tsc -p tsconfig.build.json"
 	},
 	"ava": {
 		"extensions": [
