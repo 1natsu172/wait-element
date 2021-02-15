@@ -1,8 +1,7 @@
 import PCancelable from 'p-cancelable'
-import { Options, defaultOptions, mergeOptions, NodeLike } from './options'
+import { Options, defaultOptions, mergeOptions } from './options'
 
-
-export function waitElement<Target extends NodeLike = Document>(
+export function waitElement(
 	selector: string,
 	_options?: Partial<Options>,
 ): PCancelable<Element> {
@@ -32,7 +31,8 @@ export function waitElement<Target extends NodeLike = Document>(
 		const element = checkElement(selector)
 		if (element) {
 			_hasObserved = true
-			return resolve(element)
+			resolve(element)
+			return
 		}
 
 		observer = new MutationObserver((mutations) => {

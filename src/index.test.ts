@@ -1,10 +1,9 @@
 import test from 'ava'
 import delay from 'delay'
 import jsdom from 'jsdom'
-import { waitElement } from './index'
+import {waitElement} from './index'
 
-const { JSDOM } = jsdom
-
+const {JSDOM} = jsdom
 const dom = new JSDOM()
 
 // @ts-expect-error
@@ -76,10 +75,10 @@ test('Detect elements of the same selector on each parent target', async (t) => 
 		target2.append(element2)
 	})
 
-	const checkElement1 = await waitElement('.late-comming', { target: target1 })
+	const checkElement1 = await waitElement('.late-comming', {target: target1})
 	t.is(checkElement1.id, 'late1')
 
-	const checkElement2 = await waitElement('.late-comming', { target: target2 })
+	const checkElement2 = await waitElement('.late-comming', {target: target2})
 	t.is(checkElement2.id, 'late2')
 })
 
@@ -90,7 +89,7 @@ test('Detect if an element can be found within the time limit', async (t) => {
 		document.body.append(element)
 	})
 
-	const checkElement = await waitElement('#late', { timeout: 800 })
+	const checkElement = await waitElement('#late', {timeout: 800})
 	t.is(checkElement.id, 'late')
 })
 
@@ -99,7 +98,7 @@ test.serial(
 	async (t) => {
 		const waitingElement = '#late'
 		const timeoutElement = await t.throwsAsync(
-			waitElement(waitingElement, { timeout: 500 }),
+			waitElement(waitingElement, {timeout: 500}),
 		)
 
 		await delay(800)

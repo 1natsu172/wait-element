@@ -1,6 +1,6 @@
-import test, { beforeEach } from 'ava'
-import { JSDOM } from 'jsdom'
-import { defaultOptions, mergeOptions } from './options'
+import test, {beforeEach} from 'ava'
+import {JSDOM} from 'jsdom'
+import {defaultOptions, mergeOptions} from './options'
 
 beforeEach(() => {
 	global.document = new JSDOM().window.document
@@ -19,12 +19,18 @@ test('defaultOptions: always return new object', (t) => {
 })
 
 test('mergeOptions', (t) => {
-	const targetEl = new JSDOM().window.document.createElement('a')
-	const mergedOptions = mergeOptions(defaultOptions(), { target: targetEl, timeout: 5000, observeConfigs: { subtree: false, attributeFilter: ['class'] } })
-	t.is(mergedOptions.target, targetEl)
+	const targetElement = new JSDOM().window.document.createElement('a')
+	const mergedOptions = mergeOptions(defaultOptions(), {
+		target: targetElement,
+		timeout: 5000,
+		observeConfigs: {subtree: false, attributeFilter: ['class']},
+	})
+	t.is(mergedOptions.target, targetElement)
 	t.is(mergedOptions.timeout, 5000)
-	t.deepEqual(mergedOptions.observeConfigs, { subtree: false, childList: true, attributeFilter: ['class'], attributes: true })
-
+	t.deepEqual(mergedOptions.observeConfigs, {
+		subtree: false,
+		childList: true,
+		attributeFilter: ['class'],
+		attributes: true,
+	})
 })
-
-
