@@ -21,7 +21,7 @@ export const defaultOptions = (): Options => ({
 	},
 })
 
-export const mergeOptions = <DefTarget extends NodeLike, Target extends NodeLike>(
+export const mergeOptions = (
 	defaultOptions: Options,
 	userPassingOptions: Partial<Options>,
 ): Options => {
