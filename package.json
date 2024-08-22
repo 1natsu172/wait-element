@@ -26,8 +26,13 @@
 		"dist"
 	],
 	"type": "module",
-	"typings": "dist/types/index.d.ts",
-	"main": "dist/index.js",
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs"
+		}
+	},
+	"main": "./dist/index.mjs",
+	"typings": "./dist/types/index.d.ts",
 	"homepage": "https://github.com/1natsu172/wait-element",
 	"keywords": [
 		"DOM",
@@ -43,52 +48,19 @@
 		"exist",
 		"appearance"
 	],
-	"dependencies": {
-		"p-cancelable": "^2.0.0"
-	},
+	"dependencies": {},
 	"devDependencies": {
-		"@types/jsdom": "^16.2.6",
-		"ava": "^3.15.0",
-		"delay": "^5.0.0",
-		"esbuild": "0.8.46",
-		"jsdom": "^16.4.0",
-		"mutationobserver-shim": "^0.3.7",
-		"shx": "^0.3.3",
-		"ts-node": "^9.1.1",
-		"typescript": "^4.1.5",
-		"xo": "^0.37.1"
+		"@types/jsdom": "21.1.7",
+		"vitest": "2.0.5",
+		"jsdom": "24.1.1",
+		"typescript": "5.5.4",
+		"@biomejs/biome": "1.8.3",
+		"unbuild": "2.0.0"
 	},
 	"scripts": {
-		"test": "ava ./src/**/*",
-		"lint": "xo --prettier ./src/**/*",
-		"lint:format": "xo --fix --prettier ./src/**/*",
-		"clean": "shx rm -rf dist",
-		"prebuild": "npm run clean",
-		"build": "esbuild ./src/index.ts --bundle --format=esm --outdir=dist",
-		"postbuild": "tsc -p tsconfig.build.json"
+		"test": "vitest",
+		"biome": "biome check --apply ./src",
+		"build": "unbuild"
 	},
-	"ava": {
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register"
-		],
-		"failFast": true,
-		"tap": false,
-		"verbose": true
-	},
-	"xo": {
-		"envs": [
-			"node",
-			"browser"
-		],
-		"rules": {
-			"import/no-unassigned-import": 0,
-			"@typescript-eslint/no-floating-promises": 0,
-			"@typescript-eslint/promise-function-async": 0,
-			"@typescript-eslint/consistent-indexed-object-style": 0,
-			"unicorn/filename-case": 0
-		}
-	}
+	"packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247"
 }
