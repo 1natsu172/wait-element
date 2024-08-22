@@ -48,18 +48,19 @@
 		"exist",
 		"appearance"
 	],
-	"dependencies": {},
 	"devDependencies": {
+		"@biomejs/biome": "1.8.3",
 		"@types/jsdom": "21.1.7",
-		"vitest": "2.0.5",
+		"defu": "^6.1.4",
+		"happy-dom": "^15.0.0",
 		"jsdom": "24.1.1",
 		"typescript": "5.5.4",
-		"@biomejs/biome": "1.8.3",
-		"unbuild": "2.0.0"
+		"unbuild": "2.0.0",
+		"vitest": "2.0.5"
 	},
 	"scripts": {
 		"test": "vitest",
-		"biome": "biome check --apply ./src",
+		"biome": "biome check --write ./src",
 		"build": "unbuild"
 	},
 	"packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247"
