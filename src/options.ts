@@ -1,4 +1,5 @@
 import { defu } from "defu";
+import type { Detector } from "./detectors.js";
 export interface HasQuerySelector {
 	querySelector: Document["querySelector"];
 }
@@ -11,9 +12,7 @@ export type Options = {
 	target: NodeLike;
 	immediateResolve: boolean;
 	cache: boolean;
-	detector:
-		| undefined
-		| ((element: ReturnType<HasQuerySelector["querySelector"]>) => boolean);
+	detector: undefined | Detector;
 	observeConfigs: MutationObserverInit;
 	signal: undefined | AbortSignal;
 };

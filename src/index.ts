@@ -3,7 +3,7 @@ import {
 	type DetectConditionMatcher,
 	isAppeared,
 	isDisappeared,
-} from "./detectConditions";
+} from "./detectors";
 import { type Options, defaultOptions, mergeOptions } from "./options";
 
 function createWaitElement<Result extends Element | null>(

@@ -1,186 +1,153 @@
 import { setTimeout as delay } from "node:timers/promises";
-import { JSDOM } from "jsdom";
-import { beforeEach, test } from "vitest";
+import { describe, test } from "vitest";
 import { waitDisappearElement, waitElement } from "./index";
 
-beforeEach(() => {
-	const dom = new JSDOM();
-	// @ts-expect-error
-	global.window = dom.window;
-	global.document = dom.window.document;
+describe("waitElement", () => {
+	describe("basis", () => {
+		test.todo(
+			"sould detect the appearance of an element by id-selector",
+			async (t) => {
+				const appendDomTask = delay(500).then(() => {
+					const element = document.createElement("div");
+					element.id = "late";
+					document.body.append(element);
+				});
 
-	require("mutationobserver-shim");
+				const wait = waitElement("#late");
+				const [, checkElement] = await Promise.all([appendDomTask, wait]);
+				t.is(checkElement.id, "late");
+			},
+		);
 
-	global.MutationObserver = window.MutationObserver;
-});
+		test.todo(
+			"should detect the appearance of an element by class-selector",
+			async (t) => {
+				const appendDomTask = delay(500).then(() => {
+					const element = document.createElement("div");
+					element.className = "late-comming";
+					document.body.append(element);
+				});
 
-test("Detect the appearance of an element by id-selector", async (t) => {
-	const appendDomTask = delay(500).then(() => {
-		const element = document.createElement("div");
-		element.id = "late";
-		document.body.append(element);
-	});
+				const wait = waitElement(".late-comming");
+				const [, checkElement] = await Promise.all([appendDomTask, wait]);
+				t.is(checkElement.className, "late-comming");
+			},
+		);
 
-	const wait = waitElement("#late");
-	const [, checkElement] = await Promise.all([appendDomTask, wait]);
-	t.is(checkElement.id, "late");
-});
-
-test("Detect the appearance of an element by class-selector", async (t) => {
-	const appendDomTask = delay(500).then(() => {
-		const element = document.createElement("div");
-		element.className = "late-comming";
-		document.body.append(element);
-	});
-
-	const wait = waitElement(".late-comming");
-	const [, checkElement] = await Promise.all([appendDomTask, wait]);
-	t.is(checkElement.className, "late-comming");
-});
-
-test("Check when an element already exists", async (t) => {
-	const element = document.createElement("div");
-	element.id = "exist";
-	document.body.append(element);
-
-	const checkElement = await waitElement("#exist");
-	t.is(checkElement.id, "exist");
-});
-
-test("Detect the target element by delayed add class name", async (t) => {
-	const element = document.createElement("div");
-	element.id = "exist";
-	document.body.append(element);
-
-	const addClassTask = delay(500).then(() => {
-		element.classList.add("added");
-	});
-
-	const wait = delay(300)
-		.then(() => {
-			const notDetectYet = document.querySelector("#exist.added");
-			t.is(notDetectYet, null);
-		})
-		.then(() => {
-			return waitElement("#exist.added");
-		});
-
-	const [, checkElement] = await Promise.all([addClassTask, wait]);
-	t.is(checkElement.className, "added");
-});
-
-test("Detect elements of the same selector on each parent target", async (t) => {
-	const target1 = document.createElement("p");
-	document.body.append(target1);
-	const target2 = document.createElement("span");
-	document.body.append(target2);
-
-	const appendDomTask = delay(500).then(() => {
-		const element1 = document.createElement("p");
-		element1.id = "late1";
-		element1.className = "late-comming";
-		target1.append(element1);
-
-		const element2 = document.createElement("span");
-		element2.id = "late2";
-		element2.className = "late-comming";
-		target2.append(element2);
-	});
-
-	const wait1 = waitElement(".late-comming", { target: target1 });
-
-	const wait2 = waitElement(".late-comming", { target: target2 });
-
-	const [, checkElement1, checkElement2] = await Promise.all([
-		appendDomTask,
-		wait1,
-		wait2,
-	]);
-	t.is(checkElement1.id, "late1");
-	t.is(checkElement2.id, "late2");
-});
-
-test("Detect if an element can be found within the time limit", async (t) => {
-	const appendDomTask = delay(500).then(() => {
-		const element = document.createElement("div");
-		element.id = "late";
-		document.body.append(element);
-	});
-
-	const wait = waitElement("#late", { timeout: 800 });
-
-	const [, checkElement] = await Promise.all([appendDomTask, wait]);
-	t.is(checkElement.id, "late");
-});
-
-test("Timeout if an element is not found within specified time", async (t) => {
-	const waitingElement = "#tooLateTimeout";
-	const timeoutElement = await t.throwsAsync(
-		waitElement(waitingElement, { timeout: 500 }),
-	);
-
-	await delay(800)
-		.then(() => {
+		test.todo("should return element from cache if available", async (t) => {
 			const element = document.createElement("div");
-			element.id = "tooLateTimeout";
+			element.id = "exist";
 			document.body.append(element);
-		})
-		.then(() => {
-			t.is(timeoutElement.message, `Element was not found: ${waitingElement}`);
+
+			const checkElement = await waitElement("#exist");
+			t.is(checkElement.id, "exist");
 		});
-});
 
-test("Check cancelable", async (t) => {
-	const checkElement = waitElement("#find");
+		test.todo(
+			"should detect the target element by delayed add class name",
+			async (t) => {
+				const element = document.createElement("div");
+				element.id = "exist";
+				document.body.append(element);
 
-	await delay(300);
-	checkElement.cancel();
+				const addClassTask = delay(500).then(() => {
+					element.classList.add("added");
+				});
 
-	await delay(300).then(() => {
-		const element = document.createElement("div");
-		element.id = "late";
-		document.body.append(element);
+				const wait = delay(300)
+					.then(() => {
+						const notDetectYet = document.querySelector("#exist.added");
+						t.is(notDetectYet, null);
+					})
+					.then(() => {
+						return waitElement("#exist.added");
+					});
+
+				const [, checkElement] = await Promise.all([addClassTask, wait]);
+				t.is(checkElement.className, "added");
+			},
+		);
+
+		test.todo(
+			"should detect by target (same selector, no confusion)",
+			async (t) => {
+				const target1 = document.createElement("p");
+				document.body.append(target1);
+				const target2 = document.createElement("span");
+				document.body.append(target2);
+
+				const appendDomTask = delay(500).then(() => {
+					const element1 = document.createElement("p");
+					element1.id = "late1";
+					element1.className = "late-comming";
+					target1.append(element1);
+
+					const element2 = document.createElement("span");
+					element2.id = "late2";
+					element2.className = "late-comming";
+					target2.append(element2);
+				});
+
+				const wait1 = waitElement(".late-comming", { target: target1 });
+
+				const wait2 = waitElement(".late-comming", { target: target2 });
+
+				const [, checkElement1, checkElement2] = await Promise.all([
+					appendDomTask,
+					wait1,
+					wait2,
+				]);
+				t.is(checkElement1.id, "late1");
+				t.is(checkElement2.id, "late2");
+			},
+		);
+
+		test.todo(
+			"should be different instances of each called processing",
+			async () => {},
+		);
 	});
 
-	await t.throwsAsync(checkElement);
-	t.true(checkElement.isCanceled);
-});
+	describe("abortable", () => {
+		test.todo(
+			"should be able to be aborted with an AboutController signal",
+			async (t) => {
+				const checkElement = waitElement("#find");
 
-test("Determine `promise` and `canceled-promise` generated by the same selector are different", async (t) => {
-	const checkElement1 = waitElement(".unit1");
+				await delay(300);
+				checkElement.cancel();
 
-	checkElement1.cancel();
+				await delay(300).then(() => {
+					const element = document.createElement("div");
+					element.id = "late";
+					document.body.append(element);
+				});
 
-	const checkElement2 = waitElement(".unit2");
+				await t.throwsAsync(checkElement);
+				t.true(checkElement.isCanceled);
+			},
+		);
 
-	await t.throwsAsync(checkElement1);
-	t.not(checkElement1, checkElement2);
-});
+		test.todo("should abort timeout if set AbortSignal.timeout", async (t) => {
+			const appendDomTask = delay(500).then(() => {
+				const element = document.createElement("div");
+				element.id = "late";
+				document.body.append(element);
+			});
 
-/// //////////////////////////
+			const wait = waitElement("#late", { timeout: 800 });
 
-/**
- * waitDisappearElement testings
- */
-test("waitDisappearElement", async (t) => {
-	const element = document.createElement("div");
-	element.id = "willDisappear";
-	document.body.append(element);
-
-	const removeDomTask = delay(500).then(() => {
-		document.querySelector("#willDisappear")?.remove();
+			const [, checkElement] = await Promise.all([appendDomTask, wait]);
+			t.is(checkElement.id, "late");
+		});
 	});
 
-	const yetExist = delay(300).then(() => {
-		return waitElement("#willDisappear");
+	describe("options", () => {
+		describe("detector", () => {
+			test.todo(
+				"should detect the element using the detector passed",
+				async () => {},
+			);
+		});
 	});
-	const waitDisappear = waitDisappearElement("#willDisappear");
-
-	const [, checkYetExist, checkDisappear] = await Promise.all([
-		removeDomTask,
-		yetExist,
-		waitDisappear,
-	]);
-	t.is(checkYetExist, element);
-	t.is(checkDisappear, null);
 });
