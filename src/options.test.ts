@@ -16,7 +16,7 @@ describe("defaultOptions", () => {
 });
 
 describe("mergeOptions", () => {
-	test("should be merged in favor of userSideOptions", (t) => {
+	test("should be merged in favor of userSideOptions", () => {
 		const defaultSide = defaultOptions();
 		const userSide = {
 			target: window.document.createElement("a"),
@@ -42,5 +42,14 @@ describe("mergeOptions", () => {
 			},
 			signal: userSide.signal,
 		});
+	});
+
+	test("should return defaultOptions if no passed userSideOptions", () => {
+		const defaultSide = defaultOptions();
+		const userSide = undefined;
+
+		const merged = mergeOptions(defaultSide, userSide);
+
+		assert.deepEqual(merged, defaultSide);
 	});
 });

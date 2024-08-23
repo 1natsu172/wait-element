@@ -36,7 +36,7 @@ export const defaultOptions = (): Options => ({
 
 export const mergeOptions = (
 	defaultOptions: Options,
-	userSideOptions: Partial<Options>,
+	userSideOptions: Partial<Options> | undefined,
 ) => {
 	return defu(userSideOptions, defaultOptions);
 };
