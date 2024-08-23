@@ -2,7 +2,6 @@ import type { HasQuerySelector } from "./options.js";
 
 export type Detector = (arg: {
 	element: ReturnType<HasQuerySelector["querySelector"]>;
-	cache: WeakMap<WeakKey, ReturnType<HasQuerySelector["querySelector"]>>;
 }) => boolean;
 
 export const isExist: Detector = ({ element }) => {

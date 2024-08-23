@@ -30,7 +30,7 @@ describe("mergeOptions", () => {
 		const merged = mergeOptions(defaultSide, userSide);
 
 		assert.deepEqual(merged, {
-			cache: defaultSide.cache,
+			unifyProcess: defaultSide.unifyProcess,
 			immediateResolve: defaultSide.immediateResolve,
 			target: userSide.target,
 			detector: userSide.detector,

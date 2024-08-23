@@ -11,7 +11,7 @@ export interface NodeLike extends HasQuerySelector, Node {
 export type Options = {
 	target: NodeLike;
 	immediateResolve: boolean;
-	cache: boolean;
+	unifyProcess: boolean;
 	detector: undefined | Detector;
 	observeConfigs: MutationObserverInit;
 	signal: undefined | AbortSignal;
@@ -23,7 +23,7 @@ export const defaultOptions = (): Options => ({
 	target: document,
 	// FIXME: Abort.timeout(0)で賄えるか考える
 	immediateResolve: false,
-	cache: true,
+	unifyProcess: true,
 	detector: undefined,
 	observeConfigs: {
 		childList: true,

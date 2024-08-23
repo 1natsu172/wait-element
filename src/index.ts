@@ -1,18 +1,10 @@
-import PCancelable from "p-cancelable";
-import {
-	type DetectConditionMatcher,
-	isAppeared,
-	isDisappeared,
-} from "./detectors";
+import {} from "./detectors";
 import { type Options, defaultOptions, mergeOptions } from "./options";
 
 function createWaitElement<Result extends Element | null>(
 	isMatchDetectCondition: DetectConditionMatcher<Result>,
 ) {
-	return (
-		selector: string,
-		_options?: Partial<Options>,
-	): PCancelable<Result> => {
+	return (selector: string, _options?: Partial<Options>): Promise<Result> => {
 		const options = _options
 			? mergeOptions(defaultOptions(), _options)
 			: defaultOptions();
