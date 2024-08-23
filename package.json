@@ -59,6 +59,7 @@
 	},
 	"scripts": {
 		"test": "vitest",
+		"coverage": "echo 'vitest\/ui必要か考える'&& vitest run --coverage",
 		"biome": "biome check --write ./src",
 		"build": "unbuild"
 	},
