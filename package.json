@@ -19,8 +19,8 @@
 		"url": "https://github.com/1natsu172/wait-element"
 	},
 	"browserslist": [
-		"last 2 versions",
-		"not dead"
+		"fully supports abortcontroller",
+		"fully supports mutationobserver"
 	],
 	"files": [
 		"dist"
