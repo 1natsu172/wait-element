@@ -9,20 +9,20 @@ export interface NodeLike extends HasQuerySelector, Node {
 
 export type Options = {
 	target: NodeLike;
-	timeout: number;
 	immediateResolve: boolean;
 	cache: boolean;
 	detector:
 		| undefined
 		| ((element: ReturnType<HasQuerySelector["querySelector"]>) => boolean);
 	observeConfigs: MutationObserverInit;
+	signal: undefined | AbortSignal;
 };
 
 export type UserSideOptions = Partial<Options>;
 
 export const defaultOptions = (): Options => ({
 	target: document,
-	timeout: 0,
+	// FIXME: Abort.timeout(0)で賄えるか考える
 	immediateResolve: false,
 	cache: true,
 	detector: undefined,
@@ -31,6 +31,7 @@ export const defaultOptions = (): Options => ({
 		subtree: true,
 		attributes: true,
 	},
+	signal: undefined,
 });
 
 export const mergeOptions = (

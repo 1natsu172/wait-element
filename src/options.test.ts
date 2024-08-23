@@ -20,11 +20,11 @@ describe("mergeOptions", () => {
 		const defaultSide = defaultOptions();
 		const userSide = {
 			target: window.document.createElement("a"),
-			timeout: 5000,
 			detector: (_element) => {
 				return true;
 			},
 			observeConfigs: { subtree: false, attributeFilter: ["class"] },
+			signal: AbortSignal.timeout(1000),
 		} as const satisfies UserSideOptions;
 
 		const merged = mergeOptions(defaultSide, userSide);
@@ -33,7 +33,6 @@ describe("mergeOptions", () => {
 			cache: defaultSide.cache,
 			immediateResolve: defaultSide.immediateResolve,
 			target: userSide.target,
-			timeout: userSide.timeout,
 			detector: userSide.detector,
 			observeConfigs: {
 				childList: defaultSide.observeConfigs.childList,
@@ -41,6 +40,7 @@ describe("mergeOptions", () => {
 				subtree: userSide.observeConfigs.subtree,
 				attributeFilter: userSide.observeConfigs.attributeFilter,
 			},
+			signal: userSide.signal,
 		});
 	});
 });

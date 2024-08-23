@@ -7,6 +7,6 @@ export default defineConfig({
 		env: {
 			RUN_ON_TESTING: "true",
 		},
-		environment: "happy-dom",
+		environment: "jsdom",
 	},
 });
