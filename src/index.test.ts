@@ -117,36 +117,51 @@ describe("waitElement", () => {
 	});
 
 	describe("abortable", () => {
-		test.todo(
-			"should be able to be aborted with an AboutController signal",
-			async (t) => {
-				const checkElement = waitElement("#find");
+		test("should be able to abort with an AboutController signal", async ({
+			expect,
+		}) => {
+			const ac = new AbortController();
 
-				await delay(300);
-				checkElement.cancel();
+			const checkElement = waitElement("#find", { signal: ac.signal });
 
-				await delay(300).then(() => {
-					const element = document.createElement("div");
+			await delay(300);
+
+			ac.abort("abort by user side.");
+
+			await expect(checkElement).rejects.toThrow("abort by user side.");
+
+			assert.include(ac.signal, {
+				aborted: true,
+				reason: "abort by user side.",
+			});
+		});
+
+		test("should abort timeout if set AbortSignal.timeout", async () => {
+			const element = document.createElement("div");
+
+			const simulateMutation = () =>
+				delay(500).then(() => {
 					element.id = "late";
 					document.body.append(element);
 				});
 
-				await t.throwsAsync(checkElement);
-				t.true(checkElement.isCanceled);
-			},
-		);
+			const expectTimeout = () =>
+				waitElement("#late", { signal: AbortSignal.timeout(300) });
 
-		test.todo("should abort timeout if set AbortSignal.timeout", async (t) => {
-			const appendDomTask = delay(500).then(() => {
-				const element = document.createElement("div");
-				element.id = "late";
-				document.body.append(element);
+			const expectGetElement = () =>
+				waitElement("#late", { signal: AbortSignal.timeout(800) });
+
+			const [, result1, result2] = await Promise.allSettled([
+				simulateMutation(),
+				expectTimeout(),
+				expectGetElement(),
+			]);
+
+			assert.strictEqual(result1, {
+				status: "rejected",
+				reason: new DOMException(),
 			});
-
-			const wait = waitElement("#late", { timeout: 800 });
-
-			const [, checkElement] = await Promise.all([appendDomTask, wait]);
-			t.is(checkElement.id, "late");
+			assert.strictEqual(result2, { status: "fulfilled", value: element });
 		});
 	});
 
@@ -191,9 +206,18 @@ describe("waitElement", () => {
 						waitMonkey(),
 					]);
 
-				assert.equal(resultPenguin, { status: "fulfilled", value: "Penguin" });
-				assert.equal(resultTiger, { status: "fulfilled", value: "Tiger" });
-				assert.equal(resultMonkey, { status: "rejected", reason: "timeout" });
+				assert.strictEqual(resultPenguin, {
+					status: "fulfilled",
+					value: "Penguin",
+				});
+				assert.strictEqual(resultTiger, {
+					status: "fulfilled",
+					value: "Tiger",
+				});
+				assert.strictEqual(resultMonkey, {
+					status: "rejected",
+					reason: "timeout",
+				});
 			});
 		});
 
