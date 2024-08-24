@@ -1,23 +1,27 @@
 import { assert, describe, test } from "vitest";
-import { type UserSideOptions, defaultOptions, mergeOptions } from "./options";
+import {
+	type UserSideOptions,
+	getDefaultOptions,
+	mergeOptions,
+} from "./options";
 
 describe("defaultOptions", () => {
 	test("should return always the same options", (t) => {
-		const options1 = defaultOptions();
-		const options2 = defaultOptions();
+		const options1 = getDefaultOptions();
+		const options2 = getDefaultOptions();
 		assert.deepEqual(options1, options2);
 	});
 
 	test("always return new object", () => {
-		const options1 = defaultOptions();
-		const options2 = defaultOptions();
+		const options1 = getDefaultOptions();
+		const options2 = getDefaultOptions();
 		assert.notStrictEqual(options1, options2);
 	});
 });
 
 describe("mergeOptions", () => {
 	test("should be merged in favor of userSideOptions", () => {
-		const defaultSide = defaultOptions();
+		const defaultSide = getDefaultOptions();
 		const userSide = {
 			target: window.document.createElement("a"),
 			detector: (_element) => {
@@ -31,7 +35,6 @@ describe("mergeOptions", () => {
 
 		assert.deepEqual(merged, {
 			unifyProcess: defaultSide.unifyProcess,
-			immediateResolve: defaultSide.immediateResolve,
 			target: userSide.target,
 			detector: userSide.detector,
 			observeConfigs: {
@@ -45,7 +48,7 @@ describe("mergeOptions", () => {
 	});
 
 	test("should return defaultOptions if no passed userSideOptions", () => {
-		const defaultSide = defaultOptions();
+		const defaultSide = getDefaultOptions();
 		const userSide = undefined;
 
 		const merged = mergeOptions(defaultSide, userSide);

@@ -1,30 +1,21 @@
 import { defu } from "defu";
-import type { Detector } from "./detectors.js";
-export interface HasQuerySelector {
-	querySelector: Document["querySelector"];
-}
-export interface NodeLike extends HasQuerySelector, Node {
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	[otherKey: string]: any;
-}
+import { type Detector, isExist } from "./detectors.js";
+import type { NodeLike } from "./types.js";
 
 export type Options = {
 	target: NodeLike;
-	immediateResolve: boolean;
 	unifyProcess: boolean;
-	detector: undefined | Detector;
 	observeConfigs: MutationObserverInit;
+	detector: Detector;
 	signal: undefined | AbortSignal;
 };
 
 export type UserSideOptions = Partial<Options>;
 
-export const defaultOptions = (): Options => ({
+export const getDefaultOptions = (): Options => ({
 	target: document,
-	// FIXME: Abort.timeout(0)で賄えるか考える
-	immediateResolve: false,
 	unifyProcess: true,
-	detector: undefined,
+	detector: isExist,
 	observeConfigs: {
 		childList: true,
 		subtree: true,

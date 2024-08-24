@@ -1,8 +1,8 @@
-import type { HasQuerySelector } from "./options.js";
+import type { QuerySelectorResult } from "./types.js";
 
 export type Detector = (arg: {
-	element: ReturnType<HasQuerySelector["querySelector"]>;
-}) => boolean;
+	element: QuerySelectorResult;
+}) => boolean | Promise<boolean>;
 
 export const isExist: Detector = ({ element }) => {
 	return element !== null;
