@@ -1,5 +1,5 @@
 import { setTimeout as delay } from "node:timers/promises";
-import { assert, beforeEach, describe, test } from "vitest";
+import { assert, afterEach, beforeEach, describe, test } from "vitest";
 import { waitElement } from "./index";
 
 describe("waitElement", () => {
@@ -19,7 +19,7 @@ describe("waitElement", () => {
 				waitElement("#late"),
 			]);
 
-			expect(result.id).toEqual("late");
+			expect(result?.id).toEqual("late");
 		});
 
 		test("should detect the appearance of an element by class-selector", async ({
@@ -37,7 +37,7 @@ describe("waitElement", () => {
 				waitElement(".late-comming"),
 			]);
 
-			expect(result.className).toEqual("late-comming");
+			expect(result?.className).toEqual("late-comming");
 		});
 
 		test("should return element if already exist", async ({ expect }) => {
@@ -47,7 +47,7 @@ describe("waitElement", () => {
 
 			const checkElement = await waitElement("#exist");
 
-			expect(checkElement.id).toEqual("exist");
+			expect(checkElement?.id).toEqual("exist");
 		});
 
 		test("should detect the target element by delayed add class name", async ({
@@ -76,8 +76,8 @@ describe("waitElement", () => {
 
 			const [, result] = await Promise.all([simulateAddClassName(), wait()]);
 
-			expect(result.id).toEqual(id);
-			expect(result.className).toEqual(className);
+			expect(result?.id).toEqual(id);
+			expect(result?.className).toEqual(className);
 		});
 
 		test("should detect by target (same selector, no confusion)", async ({
@@ -111,8 +111,8 @@ describe("waitElement", () => {
 				wait2(),
 			]);
 
-			expect(result1.id).toEqual("late1");
-			expect(result2.id).toEqual("late2");
+			expect(result1?.id).toEqual("late1");
+			expect(result2?.id).toEqual("late2");
 		});
 	});
 
@@ -198,12 +198,43 @@ describe("waitElement", () => {
 		});
 
 		describe("unifyProcess", () => {
-			test.todo(
-				"should be different process without unifyProcess",
-				async () => {},
-			);
+			const cleanupController = new AbortController();
 
-			test.todo("should be same process with unifyProcess", async () => {});
+			afterEach(() => {
+				cleanupController.abort("cleanup");
+			});
+
+			test("should be different process if set `unifyProcess: false`", async () => {
+				const wait = () =>
+					waitElement(".not-unify", {
+						unifyProcess: false,
+						signal: cleanupController.signal,
+					});
+
+				const firstWait = wait();
+
+				for (let index = 0; index <= 5; index++) {
+					const sameArgsWait = wait();
+
+					assert(firstWait !== sameArgsWait);
+				}
+			});
+
+			test("should be same process if set `unifyProcess: true`", async () => {
+				const wait = () =>
+					waitElement(".unify", {
+						unifyProcess: false,
+						signal: cleanupController.signal,
+					});
+
+				const firstWait = wait();
+
+				for (let index = 0; index <= 5; index++) {
+					const sameArgsWait = wait();
+
+					assert(firstWait === sameArgsWait);
+				}
+			});
 		});
 	});
 });
