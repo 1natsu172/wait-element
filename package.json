@@ -44,10 +44,13 @@
 	"exports": {
 		".": {
 			"import": "./dist/index.mjs"
+		},
+		"./detectors": {
+			"import": "./dist/detectors.mjs"
 		}
 	},
 	"main": "./dist/index.mjs",
-	"typings": "./dist/types/index.d.ts",
+	"typings": "./dist/index.d.ts",
 	"dependencies": {
 		"defu": "^6.1.4",
 		"many-keys-map": "^2.0.1"
