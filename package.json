@@ -51,15 +51,17 @@
 	"devDependencies": {
 		"@biomejs/biome": "1.8.3",
 		"@types/jsdom": "21.1.7",
+		"@vitest/coverage-v8": "^2.0.5",
+		"@vitest/ui": "^2.0.5",
 		"defu": "^6.1.4",
-		"jsdom": "24.1.1",
+		"jsdom": "25.0.0",
 		"typescript": "5.5.4",
 		"unbuild": "2.0.0",
 		"vitest": "2.0.5"
 	},
 	"scripts": {
 		"test": "vitest",
-		"coverage": "echo 'vitest/ui必要か考える'&& vitest run --coverage",
+		"coverage": "vitest --coverage --ui",
 		"biome": "biome check --write ./src",
 		"build": "unbuild"
 	},

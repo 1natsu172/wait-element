@@ -9,5 +9,8 @@ export default defineConfig({
 			RUN_ON_TESTING: "true",
 		},
 		environment: "jsdom",
+		coverage: {
+			provider: "v8",
+		},
 	},
 });
