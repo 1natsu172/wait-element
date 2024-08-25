@@ -1,81 +1,122 @@
-import PCancelable from 'p-cancelable'
-import {Options, defaultOptions, mergeOptions} from './options'
+import ManyKeysMap from "many-keys-map";
+
 import {
-	DetectConditionMatcher,
-	isAppeared,
-	isDisappeared,
-} from './detectConditions'
+	type Options,
+	type UserSideOptions,
+	getDefaultOptions,
+	mergeOptions,
+} from "./options";
+import type { QuerySelectorResult } from "./types.js";
 
-function createWaitElement<Result extends Element | null>(
-	isMatchDetectCondition: DetectConditionMatcher<Result>,
-) {
-	return function (
+const unifyCache = new ManyKeysMap<unknown, Promise<unknown>>();
+
+type InitOptions = {
+	defaultOptions: Options;
+};
+
+export function createWaitElement(initOptions: Partial<InitOptions> = {}) {
+	const { defaultOptions = getDefaultOptions() } = initOptions;
+
+	// FIXME: Generics like `<Result extends QuerySelectorResult>`, but incorrectly resolve types
+	return (
 		selector: string,
-		_options?: Partial<Options>,
-	): PCancelable<Result> {
-		const options = _options
-			? mergeOptions(defaultOptions(), _options)
-			: defaultOptions()
+		options?: UserSideOptions,
+	): Promise<QuerySelectorResult> => {
+		const { target, unifyProcess, observeConfigs, detector, signal } =
+			mergeOptions(defaultOptions, options);
 
-		const checkElement = (selector: string) => {
-			return options.target.querySelector(selector)
+		const unifyPromiseKey = [
+			selector,
+			target,
+			unifyProcess,
+			observeConfigs,
+			detector,
+			signal,
+		];
+
+		const cachedPromise = unifyCache.get(unifyPromiseKey);
+
+		if (unifyProcess && cachedPromise) {
+			return cachedPromise as Promise<QuerySelectorResult>;
 		}
 
-		return new PCancelable((resolve, reject, onCancel) => {
-			let _hasObserved = false
-			let _timeoutId: ReturnType<typeof setTimeout>
-
-			const observer: MutationObserver = new MutationObserver((mutations) => {
-				mutations.some(() => {
-					const element = checkElement(selector)
-
-					if (isMatchDetectCondition(element)) {
-						if (_timeoutId) {
-							clearTimeout(_timeoutId)
-						}
-
-						observer.disconnect()
-						_hasObserved = true
-						resolve(element)
-						return true // The same as "break" in `Array.some()`
-					}
-
-					return false
-				})
-			})
-
-			onCancel(() => {
-				if (_timeoutId) {
-					clearTimeout(_timeoutId)
+		const detectPromise = new Promise<QuerySelectorResult>(
+			// biome-ignore lint/suspicious/noAsyncPromiseExecutor: avoid nesting promise
+			async (resolve, reject) => {
+				// reject if already aborted
+				if (signal?.aborted) {
+					return reject(signal.reason);
 				}
 
-				observer.disconnect()
-				_hasObserved = true
-			})
+				const observer: MutationObserver = new MutationObserver(
+					async (mutations) => {
+						for (const _ of mutations) {
+							if (signal?.aborted) {
+								observer.disconnect();
+								break;
+							}
 
-			// Checking already element existed.
-			const element = checkElement(selector)
-			if (isMatchDetectCondition(element)) {
-				_hasObserved = true
-				resolve(element)
-				return
-			}
+							const { element, isDetected } = await detectElement({
+								selector,
+								target: target,
+								detector: detector,
+							});
 
-			// Start observe.
-			observer.observe(options.target, options.observeConfigs)
+							if (isDetected) {
+								observer.disconnect();
+								resolve(element);
+								break;
+							}
+						}
+					},
+				);
 
-			// Set timeout.
-			if (options.timeout > 0 && !_hasObserved) {
-				_timeoutId = setTimeout(() => {
-					if (!_hasObserved) {
-						observer.disconnect()
-						reject(new Error(`Element was not found: ${selector}`))
-					}
-				}, options.timeout)
-			}
-		})
-	}
+				// Abortable API by signal option
+				signal?.addEventListener(
+					"abort",
+					() => {
+						observer.disconnect();
+						return reject(signal.reason);
+					},
+					{ once: true },
+				);
+
+				// Checking already element existed.
+				const { element, isDetected } = await detectElement({
+					selector,
+					target: target,
+					detector: detector,
+				});
+
+				if (isDetected) {
+					return resolve(element);
+				}
+
+				// Start observe.
+				observer.observe(target, observeConfigs);
+			},
+		).finally(() => {
+			unifyCache.delete(unifyPromiseKey);
+		});
+
+		unifyCache.set(unifyPromiseKey, detectPromise);
+
+		return detectPromise;
+	};
 }
 
-export const waitElement = createWaitElement(isAppeared)
-export const waitDisappearElement = createWaitElement(isDisappeared)
+async function detectElement({
+	target,
+	selector,
+	detector,
+}: {
+	target: Options["target"];
+	selector: string;
+	detector: Options["detector"];
+}): Promise<{ element: QuerySelectorResult; isDetected: boolean }> {
+	const element = target.querySelector(selector);
+
+	return { element, isDetected: await detector({ element }) };
+}
+
+export const waitElement = createWaitElement();

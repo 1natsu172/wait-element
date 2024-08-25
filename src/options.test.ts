@@ -1,36 +1,58 @@
-import test, {beforeEach} from 'ava'
-import {JSDOM} from 'jsdom'
-import {defaultOptions, mergeOptions} from './options'
+import { assert, describe, test } from "vitest";
+import {
+	type UserSideOptions,
+	getDefaultOptions,
+	mergeOptions,
+} from "./options";
 
-beforeEach(() => {
-	global.document = new JSDOM().window.document
-})
+describe("defaultOptions", () => {
+	test("should return always the same options", (t) => {
+		const options1 = getDefaultOptions();
+		const options2 = getDefaultOptions();
+		assert.deepEqual(options1, options2);
+	});
 
-test('defaultOptions: always the same', (t) => {
-	const options1 = defaultOptions()
-	const options2 = defaultOptions()
-	t.deepEqual(options1, options2)
-})
+	test("always return new object", () => {
+		const options1 = getDefaultOptions();
+		const options2 = getDefaultOptions();
+		assert.notStrictEqual(options1, options2);
+	});
+});
 
-test('defaultOptions: always return new object', (t) => {
-	const options1 = defaultOptions()
-	const options2 = defaultOptions()
-	t.not(options1, options2)
-})
+describe("mergeOptions", () => {
+	test("should be merged in favor of userSideOptions", () => {
+		const defaultSide = getDefaultOptions();
+		const userSide = {
+			target: window.document.createElement("a"),
+			detector: (_element) => {
+				return true;
+			},
+			observeConfigs: { subtree: false, attributeFilter: ["class"] },
+			signal: AbortSignal.timeout(1000),
+		} as const satisfies UserSideOptions;
 
-test('mergeOptions', (t) => {
-	const targetElement = new JSDOM().window.document.createElement('a')
-	const mergedOptions = mergeOptions(defaultOptions(), {
-		target: targetElement,
-		timeout: 5000,
-		observeConfigs: {subtree: false, attributeFilter: ['class']},
-	})
-	t.is(mergedOptions.target, targetElement)
-	t.is(mergedOptions.timeout, 5000)
-	t.deepEqual(mergedOptions.observeConfigs, {
-		subtree: false,
-		childList: true,
-		attributeFilter: ['class'],
-		attributes: true,
-	})
-})
+		const merged = mergeOptions(defaultSide, userSide);
+
+		assert.deepEqual(merged, {
+			unifyProcess: defaultSide.unifyProcess,
+			target: userSide.target,
+			detector: userSide.detector,
+			observeConfigs: {
+				childList: defaultSide.observeConfigs.childList,
+				attributes: defaultSide.observeConfigs.attributes,
+				subtree: userSide.observeConfigs.subtree,
+				attributeFilter: userSide.observeConfigs.attributeFilter,
+			},
+			signal: userSide.signal,
+		});
+	});
+
+	test("should return defaultOptions if no passed userSideOptions", () => {
+		const defaultSide = getDefaultOptions();
+		const userSide = undefined;
+
+		const merged = mergeOptions(defaultSide, userSide);
+
+		assert.deepEqual(merged, defaultSide);
+	});
+});
