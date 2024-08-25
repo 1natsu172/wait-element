@@ -195,6 +195,16 @@ describe.shuffle("waitElement", () => {
 			// @ts-expect-error missing type infer
 			assert.strictEqual(result2.value.id, "late");
 		});
+
+		test("should reject if already signal aborted", async () => {
+			try {
+				await waitElement(".aborted", {
+					signal: AbortSignal.abort("already aborted for test"),
+				});
+			} catch (error) {
+				assert.strictEqual(error, "already aborted for test");
+			}
+		});
 	});
 
 	describe("options", () => {
