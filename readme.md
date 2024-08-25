@@ -1,5 +1,4 @@
 # wait-element
-[![Travis (.org)](https://img.shields.io/travis/1natsu172/wait-element.svg?style=for-the-badge)](https://travis-ci.org/1natsu172/wait-element)
 [![npm](https://img.shields.io/npm/v/@1natsu/wait-element.svg?style=for-the-badge)](https://www.npmjs.com/package/@1natsu/wait-element)
 ![npm bundle size (minified)](https://img.shields.io/bundlephobia/min/@1natsu/wait-element.svg?style=for-the-badge)
 ![npm bundle size (minified + gzip)](https://img.shields.io/bundlephobia/minzip/@1natsu/wait-element.svg?style=for-the-badge)
@@ -12,6 +11,7 @@
 * Promise API
 * Driven by `MutationObserver`
 * Detect by `querySelecrtor`
+* Available stop by `AbortSignal`
 
 If the target element already exists when execution of "wait-element", it immediately `resolve` and return the element.
 
@@ -19,7 +19,16 @@ If the target element already exists when execution of "wait-element", it immedi
 ## Install
 
 ```bash
-$ npm install @1natsu/wait-element
+npm install @1natsu/wait-element
+```
+```bash
+yarn add @1natsu/wait-element
+```
+```bash
+pnpm add @1natsu/wait-element
+```
+```bash
+bun add @1natsu/wait-element
 ```
 
 ## Usage
@@ -27,74 +36,100 @@ $ npm install @1natsu/wait-element
 ### Module specifiers
 
 ```js
-import {waitElement, waitDisappearElement} from '@1natsu/wait-element';
+import { waitElement } from '@1natsu/wait-element';
 ```
 
 #### Basically
 
 ```js
-(async () => {
-  const el = await waitElement('.late-comming');
-  console.log(el);
-  //=> example: "<div class="late-comming">I'm late</div>"
-})();
+const el = await waitElement('.late-comming');
+console.log(el);
+//=> example: "<div class="late-comming">I'm late</div>"
 ```
 
-#### When specify a parent element (specify MutationObserve target)
+#### Specify parent target element (specify MutationObserve target)
 
 ```js
-(async () => {
-  const parent = await waitElement('#parent');
-  const el = await waitElement('.late-comming', { target: parent });
-  console.log(el);
-  //=> example: "<div class="late-comming">I'm late</div>"
-})();
+const parent = await waitElement('#parent');
+const el = await waitElement('.late-comming', { target: parent });
+console.log(el);
+//=> example: "<div class="late-comming">I'm late</div>"
 ```
 
-#### When setting timeout
+#### Setting timeout
 
 ```js
-(async () => {
-  const el = await waitElement('.late-comming', { timeout: 5000 }).catch(err => console.log(err));
-  console.log(el);
-  //=> If detected element: "<div class="late-comming">I'm late</div>"
-  //=> If timeouted: Error: Element was not found: '.late-coming'
-})();
+const el = await waitElement('.late-comming', { signal: AbortSignal.timeout(1000) }).catch(err => console.log(err));
+console.log(el);
+//=> If detected element: "<div class="late-comming">I'm late</div>"
+//=> If timeouted: DOMException: TimeoutError
 ```
 
-#### When cancel wait-element
+#### Abort the waiting
 
 ```js
-(async () => {
-  let el;
+try {
+	const waitAbortable = new AbortController();
 
-  try {
-    el = waitElement('.late-comming');
-    if (!isCondition) el.cancel();
-  } catch {
-    // some handling...
-  }
-})();
+	const checkElement = waitElement('.late-comming', { signal: waitAbortable.signal });
+
+	waitAbortable.abort("abort this time!");
+
+} catch(error) {
+	// After abort handling...
+}
 ```
 
-#### Wait for the element to disappear
+#### Custom detect condition
 
 ```js
-(async () => {
-	const el = await waitDisappearElement('.will-disappear');
-	// disappeared the element from dom tree
-  console.log(el);
-  //=> example: null
-})();
+const el = await waitElement("#animal", {
+  detector: ({ element }) => element?.textContent === "Tiger",
+})
+console.log(el.textContent);
+//=> example: Tiger
+```
+
+```js
+import { isNotExist } from "@1natsu/wait-element/detectors";
+
+// when resolve if “not exist” or “disappear” at the time of call
+const result = await waitElement(".hero", { detector: isNotExist });
+//=> result: null
+```
+
+#### Unify waiting process
+
+Unifies the process of finding an element. If set `true`, increases efficiency. Unify the same arguments(includes options) with each other.
+
+```js
+const A = waitElement(".late-comming", {
+	unifyProcess: true,
+});
+
+const B = waitElement(".late-comming", {
+	unifyProcess: true,
+});
+
+const C = waitElement(".late-comming", {
+	unifyProcess: true,
+	signal: AbortSignal.timeout(1000)
+});
+
+const D = waitElement(".late-comming", {
+	unifyProcess: false,
+});
+
+// Unified:
+// A === B
+// B !== C
+// B !== D
 ```
 
 
 ## API
 
 ### waitElement(selector, [options])
-### waitDisappearElement(selector, [options])
-
-`waitElement` & `waitDisappearElement` is same api. Difference is waiting element for appear or disappear.
 
 #### selector
 
@@ -104,45 +139,13 @@ Format is [CSS-selector](https://developer.mozilla.org/en-US/docs/Learn/CSS/Intr
 
 #### options
 
-##### target
+Passed options is merged with default configs.
 
-Type: `HTMLElement`<br>
-Default: `document`
+[See TS definition for detailed information](https://github.com/1natsu172/wait-element/blob/master/src/options.ts)
 
-Specify a parent node (specify MutationObserve target).
+### createWaitElement(initOptions)
 
-When you know the parent node of the element you want to detect.
-
-* Please also refer to the [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver)
-
-##### timeout
-
-Type: `number`<br>
-Default: `0`<br>
-Unit: ms(Millisecond)
-
-There is no timeout by default.
-
-##### observeConfigs
-
-Type: `MutationObserverInit`<br>
-Default:
-```
-{
-	childList: true,
-	subtree: true,
-	attributes: true,
-}
-```
-
-passed configs is merged with default configs.
-
-### waitElement#cancel()
-Type: `Function`
-
-Stop waiting for the element. Cancellation is synchronous.
-
-Based on [p-cancelable](https://github.com/sindresorhus/p-cancelable). Appreciate it.
+Custom waitElement function can be created.
 
 ## Similar
 
@@ -150,7 +153,6 @@ The very similar library.
 
 * [element-ready](https://github.com/sindresorhus/element-ready)
   * Implementation method is different from this library.
-
 
 ## License
 
