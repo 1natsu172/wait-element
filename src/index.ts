@@ -66,7 +66,7 @@ export function createWaitElement(initOptions: Partial<InitOptions> = {}) {
 					},
 				);
 
-				// Abort by signal
+				// Abortable API by signal option
 				signal?.addEventListener(
 					"abort",
 					() => {
