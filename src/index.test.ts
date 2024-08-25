@@ -1,8 +1,36 @@
 import { setTimeout as delay } from "node:timers/promises";
-import { assert, afterEach, beforeEach, describe, test } from "vitest";
+import { assert, beforeEach, describe, test } from "vitest";
 import { waitElement } from "./index";
 
+const TEST_SANDBOX = "test-sandbox";
+
+/**
+ * @description
+ * Tests for DOM elements must always be tested against the `sandboxElement`. This is because the global DOM (JSDom) is common between tests, causing DOM elements to conflict.
+ * Cleaning the custom element each tests in `beforeEach` is a workaround to avoid this problem.
+ *
+ * refs: https://github.com/vitest-dev/vitest/issues/5919
+ */
 describe("waitElement", () => {
+	let sandboxElement = document.createElement(TEST_SANDBOX);
+
+	const prepareCleanSandbox = () => {
+		const isExistSandbox = document.querySelector(TEST_SANDBOX);
+
+		if (isExistSandbox) {
+			isExistSandbox.remove();
+		}
+
+		// create new instance node and attach
+		document.body.appendChild(document.createElement(TEST_SANDBOX));
+
+		// reference from dom
+		// @ts-expect-error absolutely exists.
+		sandboxElement = document.querySelector(TEST_SANDBOX);
+	};
+
+	beforeEach(prepareCleanSandbox);
+
 	describe("basis", () => {
 		test("sould detect the appearance of an element by id-selector", async ({
 			expect,
@@ -11,7 +39,7 @@ describe("waitElement", () => {
 				delay(500).then(() => {
 					const element = document.createElement("div");
 					element.id = "late";
-					document.body.append(element);
+					sandboxElement.append(element);
 				});
 
 			const [, result] = await Promise.all([
@@ -29,7 +57,7 @@ describe("waitElement", () => {
 				delay(500).then(() => {
 					const element = document.createElement("div");
 					element.className = "late-comming";
-					document.body.append(element);
+					sandboxElement.append(element);
 				});
 
 			const [, result] = await Promise.all([
@@ -43,7 +71,7 @@ describe("waitElement", () => {
 		test("should return element if already exist", async ({ expect }) => {
 			const element = document.createElement("div");
 			element.id = "exist";
-			document.body.append(element);
+			sandboxElement.append(element);
 
 			const checkElement = await waitElement("#exist");
 
@@ -59,7 +87,7 @@ describe("waitElement", () => {
 
 			const element = document.createElement("div");
 			element.id = id;
-			document.body.append(element);
+			sandboxElement.append(element);
 
 			const simulateAddClassName = () =>
 				delay(500).then(() => {
@@ -84,9 +112,9 @@ describe("waitElement", () => {
 			expect,
 		}) => {
 			const target1 = document.createElement("p");
-			document.body.append(target1);
+			sandboxElement.append(target1);
 			const target2 = document.createElement("span");
-			document.body.append(target2);
+			sandboxElement.append(target2);
 
 			const appendDomTask = () =>
 				delay(500).then(() => {
@@ -142,7 +170,7 @@ describe("waitElement", () => {
 			const simulateMutation = () =>
 				delay(500).then(() => {
 					element.id = "late";
-					document.body.append(element);
+					sandboxElement.append(element);
 				});
 
 			const expectTimeout = () =>
@@ -157,11 +185,15 @@ describe("waitElement", () => {
 				expectGetElement(),
 			]);
 
-			assert.strictEqual(result1, {
-				status: "rejected",
-				reason: new DOMException(),
-			});
-			assert.strictEqual(result2, { status: "fulfilled", value: element });
+			assert.strictEqual(result1.status, "rejected");
+			// @ts-expect-error missing type infer
+			assert.instanceOf(result1.reason, DOMException);
+			// @ts-expect-error missing type infer
+			assert.strictEqual(result1.reason.name, "TimeoutError");
+
+			assert.strictEqual(result2.status, "fulfilled");
+			// @ts-expect-error missing type infer
+			assert.strictEqual(result2.value.id, "late");
 		});
 	});
 
@@ -171,7 +203,7 @@ describe("waitElement", () => {
 				const element = document.createElement("div");
 				element.id = "animal";
 				element.textContent = "Elephant";
-				document.body.append(element);
+				sandboxElement.append(element);
 
 				const simulateChangeTextContent = async () => {
 					await delay(500);
