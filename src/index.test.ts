@@ -222,17 +222,10 @@ describe("waitElement", () => {
 		});
 
 		describe("unifyProcess", () => {
-			const cleanupController = new AbortController();
-
-			afterEach(() => {
-				cleanupController.abort("cleanup");
-			});
-
 			test("should be different process if set `unifyProcess: false`", async () => {
 				const wait = () =>
 					waitElement(".not-unify", {
 						unifyProcess: false,
-						signal: cleanupController.signal,
 					});
 
 				const firstWait = wait();
@@ -240,15 +233,14 @@ describe("waitElement", () => {
 				for (let index = 0; index <= 5; index++) {
 					const sameArgsWait = wait();
 
-					assert(firstWait !== sameArgsWait);
+					assert.notStrictEqual(firstWait, sameArgsWait);
 				}
 			});
 
 			test("should be same process if set `unifyProcess: true`", async () => {
 				const wait = () =>
 					waitElement(".unify", {
-						unifyProcess: false,
-						signal: cleanupController.signal,
+						unifyProcess: true,
 					});
 
 				const firstWait = wait();
@@ -256,7 +248,7 @@ describe("waitElement", () => {
 				for (let index = 0; index <= 5; index++) {
 					const sameArgsWait = wait();
 
-					assert(firstWait === sameArgsWait);
+					assert.strictEqual(firstWait, sameArgsWait);
 				}
 			});
 		});
