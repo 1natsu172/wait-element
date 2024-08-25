@@ -167,9 +167,7 @@ describe("waitElement", () => {
 
 	describe("options", () => {
 		describe("detector", () => {
-			test("should detect the element using the detector passed", async ({
-				expect,
-			}) => {
+			test("should detect the element using the detector passed", async () => {
 				const element = document.createElement("div");
 				element.id = "animal";
 				element.textContent = "Elephant";
@@ -206,18 +204,20 @@ describe("waitElement", () => {
 						waitMonkey(),
 					]);
 
-				assert.strictEqual(resultPenguin, {
+				assert.include(resultPenguin, {
 					status: "fulfilled",
 					value: "Penguin",
 				});
-				assert.strictEqual(resultTiger, {
+				assert.include(resultTiger, {
 					status: "fulfilled",
 					value: "Tiger",
 				});
-				assert.strictEqual(resultMonkey, {
-					status: "rejected",
-					reason: "timeout",
-				});
+
+				assert.strictEqual(resultMonkey.status, "rejected");
+				// @ts-expect-error missing type infer
+				assert.instanceOf(resultMonkey.reason, DOMException);
+				// @ts-expect-error missing type infer
+				assert.strictEqual(resultMonkey.reason.name, "TimeoutError");
 			});
 		});
 
