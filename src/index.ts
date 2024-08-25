@@ -12,7 +12,7 @@ type InitOptions = {
 export function createWaitElement(initOptions: Partial<InitOptions> = {}) {
 	const { defaultOptions = getDefaultOptions() } = initOptions;
 
-	// FIXME: Result extends Element | null
+	// FIXME: Generics like `<Result extends QuerySelectorResult>`, but incorrectly resolve types
 	return (
 		selector: string,
 		options?: Partial<Options>,
