@@ -11,7 +11,7 @@ const TEST_SANDBOX = "test-sandbox";
  *
  * refs: https://github.com/vitest-dev/vitest/issues/5919
  */
-describe("waitElement", () => {
+describe.shuffle("waitElement", () => {
 	let sandboxElement = document.createElement(TEST_SANDBOX);
 
 	const prepareCleanSandbox = () => {
