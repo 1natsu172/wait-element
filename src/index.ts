@@ -1,6 +1,11 @@
 import ManyKeysMap from "many-keys-map";
 
-import { type Options, getDefaultOptions, mergeOptions } from "./options";
+import {
+	type Options,
+	type UserSideOptions,
+	getDefaultOptions,
+	mergeOptions,
+} from "./options";
 import type { QuerySelectorResult } from "./types.js";
 
 const unifyCache = new ManyKeysMap<unknown, Promise<unknown>>();
@@ -15,7 +20,7 @@ export function createWaitElement(initOptions: Partial<InitOptions> = {}) {
 	// FIXME: Generics like `<Result extends QuerySelectorResult>`, but incorrectly resolve types
 	return (
 		selector: string,
-		options?: Partial<Options>,
+		options?: UserSideOptions,
 	): Promise<QuerySelectorResult> => {
 		const { target, unifyProcess, observeConfigs, detector, signal } =
 			mergeOptions(defaultOptions, options);
