@@ -11,7 +11,7 @@
 * Promise API
 * Driven by `MutationObserver`
 * Detect by `querySelecrtor`
-* Available stop by `AbortSignal`
+* Possible to abort with `AbortSignal`
 
 If the target element already exists when execution of "wait-element", it immediately `resolve` and return the element.
 
@@ -36,13 +36,13 @@ bun add @1natsu/wait-element
 ### Module specifiers
 
 ```js
-import { waitElement } from '@1natsu/wait-element';
+import { waitElement } from "@1natsu/wait-element";
 ```
 
 #### Basically
 
 ```js
-const el = await waitElement('.late-comming');
+const el = await waitElement(".late-comming");
 console.log(el);
 //=> example: "<div class="late-comming">I'm late</div>"
 ```
@@ -50,8 +50,8 @@ console.log(el);
 #### Specify parent target element (specify MutationObserve target)
 
 ```js
-const parent = await waitElement('#parent');
-const el = await waitElement('.late-comming', { target: parent });
+const parent = await waitElement("#parent");
+const el = await waitElement(".late-comming", { target: parent });
 console.log(el);
 //=> example: "<div class="late-comming">I'm late</div>"
 ```
@@ -59,7 +59,7 @@ console.log(el);
 #### Setting timeout
 
 ```js
-const el = await waitElement('.late-comming', { signal: AbortSignal.timeout(1000) }).catch(err => console.log(err));
+const el = await waitElement(".late-comming", { signal: AbortSignal.timeout(1000) }).catch(err => console.log(err));
 console.log(el);
 //=> If detected element: "<div class="late-comming">I'm late</div>"
 //=> If timeouted: DOMException: TimeoutError
@@ -71,7 +71,7 @@ console.log(el);
 try {
 	const waitAbortable = new AbortController();
 
-	const checkElement = waitElement('.late-comming', { signal: waitAbortable.signal });
+	const checkElement = waitElement(".late-comming", { signal: waitAbortable.signal });
 
 	waitAbortable.abort("abort this time!");
 
