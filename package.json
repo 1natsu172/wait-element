@@ -18,21 +18,6 @@
 		"type": "git",
 		"url": "https://github.com/1natsu172/wait-element"
 	},
-	"browserslist": [
-		"fully supports abortcontroller",
-		"fully supports mutationobserver"
-	],
-	"files": [
-		"dist"
-	],
-	"type": "module",
-	"exports": {
-		".": {
-			"import": "./dist/index.mjs"
-		}
-	},
-	"main": "./dist/index.mjs",
-	"typings": "./dist/types/index.d.ts",
 	"homepage": "https://github.com/1natsu172/wait-element",
 	"keywords": [
 		"DOM",
@@ -48,6 +33,25 @@
 		"exist",
 		"appearance"
 	],
+	"browserslist": [
+		"fully supports abortcontroller",
+		"fully supports mutationobserver"
+	],
+	"files": [
+		"dist"
+	],
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs"
+		}
+	},
+	"main": "./dist/index.mjs",
+	"typings": "./dist/types/index.d.ts",
+	"dependencies": {
+		"defu": "^6.1.4",
+		"many-keys-map": "^2.0.1"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "1.8.3",
 		"@types/jsdom": "21.1.7",
@@ -64,9 +68,6 @@
 		"biome": "biome check --write ./src",
 		"build": "unbuild"
 	},
-	"packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247",
-	"dependencies": {
-		"defu": "^6.1.4",
-		"many-keys-map": "^2.0.1"
-	}
+	"packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247"
+
 }
