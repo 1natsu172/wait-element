@@ -224,18 +224,27 @@ describe.shuffle("waitElement", () => {
 
 				const waitPenguin = () =>
 					waitElement("#animal", {
-						detector: ({ element }) => element?.textContent === "Penguin",
+						detector: (element) =>
+							element?.textContent === "Penguin"
+								? { isDetected: true, result: element }
+								: { isDetected: false },
 					}).then((element) => element?.textContent);
 
 				const waitTiger = () =>
 					waitElement("#animal", {
-						detector: ({ element }) => element?.textContent === "Tiger",
+						detector: (element) =>
+							element?.textContent === "Tiger"
+								? { isDetected: true, result: element }
+								: { isDetected: false },
 					}).then((element) => element?.textContent);
 
 				const waitMonkey = () =>
 					waitElement("#animal", {
 						signal: AbortSignal.timeout(1500),
-						detector: ({ element }) => element?.textContent === "Monkey",
+						detector: (element) =>
+							element?.textContent === "Monkey"
+								? { isDetected: true, result: element }
+								: { isDetected: false },
 					}).then((element) => element?.textContent);
 
 				const [, resultPenguin, resultTiger, resultMonkey] =

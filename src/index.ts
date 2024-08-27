@@ -1,29 +1,42 @@
 import ManyKeysMap from "many-keys-map";
 
+import type { DetectorResultType } from "./detectors.js";
 import {
+	type InstanceOptions,
 	type Options,
 	type UserSideOptions,
 	getDefaultOptions,
 	mergeOptions,
 } from "./options";
-import type { QuerySelectorResult } from "./types.js";
+import type { QuerySelectorReturn } from "./types.js";
 
 const unifyCache = new ManyKeysMap<unknown, Promise<unknown>>();
 
-type InitOptions = {
-	defaultOptions: Options;
-};
+export function createWaitElement<
+	Instance_Result = unknown,
+	Instance_QuerySelectorResult extends
+		QuerySelectorReturn = QuerySelectorReturn,
+>(
+	instanceOptions: InstanceOptions<
+		Instance_Result,
+		Instance_QuerySelectorResult
+	>,
+) {
+	const { defaultOptions } = instanceOptions;
 
-export function createWaitElement(initOptions: Partial<InitOptions> = {}) {
-	const { defaultOptions = getDefaultOptions() } = initOptions;
-
-	// FIXME: Generics like `<Result extends QuerySelectorResult>`, but incorrectly resolve types
-	return (
+	return <
+		Result = Instance_Result,
+		QuerySelectorResult extends QuerySelectorReturn = QuerySelectorReturn,
+	>(
 		selector: string,
-		options?: UserSideOptions,
-	): Promise<QuerySelectorResult> => {
+		options?: UserSideOptions<Result, QuerySelectorResult>,
+	): Promise<Result> => {
+		// NOTE: defuはマージで優先した型へ絞り込んで返さずユニオン型で返すためキャストしている。`options?: UserSideOptions<Result,…>` のジェネリクスで実際には型は動的に解決されるため問題ない。
 		const { target, unifyProcess, observeConfigs, detector, signal } =
-			mergeOptions(defaultOptions, options);
+			mergeOptions(options, defaultOptions) as unknown as Options<
+				Result,
+				QuerySelectorResult
+			>;
 
 		const unifyPromiseKey = [
 			selector,
@@ -37,10 +50,10 @@ export function createWaitElement(initOptions: Partial<InitOptions> = {}) {
 		const cachedPromise = unifyCache.get(unifyPromiseKey);
 
 		if (unifyProcess && cachedPromise) {
-			return cachedPromise as Promise<QuerySelectorResult>;
+			return cachedPromise as Promise<Result>;
 		}
 
-		const detectPromise = new Promise<QuerySelectorResult>(
+		const detectPromise = new Promise<Result>(
 			// biome-ignore lint/suspicious/noAsyncPromiseExecutor: avoid nesting promise
 			async (resolve, reject) => {
 				// reject if already aborted
@@ -56,15 +69,15 @@ export function createWaitElement(initOptions: Partial<InitOptions> = {}) {
 								break;
 							}
 
-							const { element, isDetected } = await detectElement({
+							const detectResult = await detectElement({
 								selector,
 								target: target,
 								detector: detector,
 							});
 
-							if (isDetected) {
+							if (detectResult.isDetected) {
 								observer.disconnect();
-								resolve(element);
+								resolve(detectResult.result);
 								break;
 							}
 						}
@@ -82,14 +95,14 @@ export function createWaitElement(initOptions: Partial<InitOptions> = {}) {
 				);
 
 				// Checking already element existed.
-				const { element, isDetected } = await detectElement({
+				const detectResult = await detectElement({
 					selector,
 					target: target,
 					detector: detector,
 				});
 
-				if (isDetected) {
-					return resolve(element);
+				if (detectResult.isDetected) {
+					return resolve(detectResult.result);
 				}
 
 				// Start observe.
@@ -105,18 +118,25 @@ export function createWaitElement(initOptions: Partial<InitOptions> = {}) {
 	};
 }
 
-async function detectElement({
+async function detectElement<
+	Result = unknown,
+	QuerySelectorResult extends QuerySelectorReturn = QuerySelectorReturn,
+>({
 	target,
 	selector,
 	detector,
 }: {
-	target: Options["target"];
+	target: Options<Result, QuerySelectorResult>["target"];
 	selector: string;
-	detector: Options["detector"];
-}): Promise<{ element: QuerySelectorResult; isDetected: boolean }> {
-	const element = target.querySelector(selector);
+	detector: Options<Result, QuerySelectorResult>["detector"];
+}): Promise<DetectorResultType<Result>> {
+	const element = target.querySelector(selector) as QuerySelectorResult;
 
-	return { element, isDetected: await detector({ element }) };
+	return await detector(element);
 }
 
-export const waitElement = createWaitElement();
+export const waitElement = createWaitElement({
+	defaultOptions: getDefaultOptions(),
+});
+
+export { getDefaultOptions };
