@@ -1,8 +1,11 @@
 import { defu } from "defu";
 import { type Detector, isExist } from "./detectors.js";
-import type { NodeLike } from "./types.js";
+import type { DefaultResult, NodeLike, QuerySelectorReturn } from "./types.js";
 
-export interface Options {
+export interface Options<
+	Result = unknown,
+	QuerySelectorResult extends QuerySelectorReturn = QuerySelectorReturn,
+> {
 	/**
 	 * @type HTMLElement
 	 * @default document
@@ -38,7 +41,7 @@ export interface Options {
 	 * @default isExist
 	 * @description Can define functions for resolve conditions.
 	 */
-	detector: Detector;
+	detector: Detector<Result, QuerySelectorResult>;
 
 	/**
 	 * @type AbortSignal
@@ -49,9 +52,24 @@ export interface Options {
 	signal: undefined | AbortSignal;
 }
 
-export type UserSideOptions = Partial<Options>;
+export type UserSideOptions<
+	Result = unknown,
+	QuerySelectorResult extends QuerySelectorReturn = QuerySelectorReturn,
+> = Partial<Options<Result, QuerySelectorResult>>;
 
-export const getDefaultOptions = (): Options => ({
+export type InstanceOptions<
+	Result = unknown,
+	QuerySelectorResult extends QuerySelectorReturn = QuerySelectorReturn,
+> = {
+	defaultOptions: Options<Result, QuerySelectorResult>;
+};
+
+export type DefaultOptions<QuerySelectorResult extends QuerySelectorReturn> =
+	Options<DefaultResult, QuerySelectorResult>;
+
+export const getDefaultOptions = <
+	QuerySelectorResult extends QuerySelectorReturn = QuerySelectorReturn,
+>(): DefaultOptions<QuerySelectorResult> => ({
 	target: document,
 	unifyProcess: true,
 	detector: isExist,
@@ -63,9 +81,16 @@ export const getDefaultOptions = (): Options => ({
 	signal: undefined,
 });
 
-export const mergeOptions = (
-	defaultOptions: Options,
-	userSideOptions: Partial<Options> | undefined,
+export const mergeOptions = <
+	Instance_Result,
+	Result,
+	Instance_QuerySelectorResult extends QuerySelectorReturn,
+	QuerySelectorResult extends QuerySelectorReturn,
+>(
+	userSideOptions: Partial<Options<Result, QuerySelectorResult>> | undefined,
+	defaultOptions:
+		| Options<Result, QuerySelectorResult>
+		| Options<Instance_Result, Instance_QuerySelectorResult>,
 ) => {
 	return defu(userSideOptions, defaultOptions);
 };

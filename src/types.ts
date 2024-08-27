@@ -6,4 +6,6 @@ export interface NodeLike extends HasQuerySelector, Node {
 	[otherKey: string]: any;
 }
 
-export type QuerySelectorResult = ReturnType<HasQuerySelector["querySelector"]>;
+export type QuerySelectorReturn = ReturnType<HasQuerySelector["querySelector"]>;
+
+export type DefaultResult = Element;

@@ -24,14 +24,14 @@ describe("mergeOptions", () => {
 		const defaultSide = getDefaultOptions();
 		const userSide = {
 			target: window.document.createElement("a"),
-			detector: (_element) => {
-				return true;
+			detector: (element) => {
+				return { isDetected: true, result: element };
 			},
 			observeConfigs: { subtree: false, attributeFilter: ["class"] },
 			signal: AbortSignal.timeout(1000),
 		} as const satisfies UserSideOptions;
 
-		const merged = mergeOptions(defaultSide, userSide);
+		const merged = mergeOptions(userSide, defaultSide);
 
 		assert.deepEqual(merged, {
 			unifyProcess: defaultSide.unifyProcess,
@@ -51,7 +51,7 @@ describe("mergeOptions", () => {
 		const defaultSide = getDefaultOptions();
 		const userSide = undefined;
 
-		const merged = mergeOptions(defaultSide, userSide);
+		const merged = mergeOptions(userSide, defaultSide);
 
 		assert.deepEqual(merged, defaultSide);
 	});
