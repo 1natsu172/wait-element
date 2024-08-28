@@ -84,8 +84,11 @@ try {
 
 ```js
 const el = await waitElement("#animal", {
-  detector: ({ element }) => element?.textContent === "Tiger",
-})
+  detector: (element) =>
+		element?.textContent === "Tiger"
+			? { isDetected: true, result: element }
+			: { isDetected: false },
+});
 console.log(el.textContent);
 //=> example: Tiger
 ```
