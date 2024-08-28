@@ -270,6 +270,24 @@ describe.shuffle("waitElement", () => {
 				// @ts-expect-error missing type infer
 				assert.strictEqual(resultMonkey.reason.name, "TimeoutError");
 			});
+
+			test("should be awaitable detector", async () => {
+				const element = document.createElement("div");
+				element.id = "awaitable";
+				element.textContent = "good";
+				sandboxElement.append(element);
+
+				const result = await waitElement("#awaitable", {
+					detector: async (element) => {
+						return {
+							isDetected: true,
+							result: await delay(100, `${element?.textContent} awaitable!`),
+						};
+					},
+				});
+
+				assert.strictEqual(result, "good awaitable!");
+			});
 		});
 
 		describe("unifyProcess", () => {
