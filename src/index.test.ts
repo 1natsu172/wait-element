@@ -1,5 +1,5 @@
 import { setTimeout as delay } from "node:timers/promises";
-import { assert, beforeEach, describe, test } from "vitest";
+import { assert, beforeEach, describe, test, vi } from "vitest";
 import { waitElement } from "./index";
 
 const TEST_SANDBOX = "test-sandbox";
@@ -32,7 +32,7 @@ describe.shuffle("waitElement", () => {
 	beforeEach(prepareCleanSandbox);
 
 	describe("basis", () => {
-		test("sould detect the appearance of an element by id-selector", async ({
+		test("should detect the appearance of an element by id-selector", async ({
 			expect,
 		}) => {
 			const simulateMutation = () =>
@@ -319,6 +319,43 @@ describe.shuffle("waitElement", () => {
 
 					assert.strictEqual(firstWait, sameArgsWait);
 				}
+			});
+		});
+
+		describe("customMatcher", () => {
+			test("should get the element via customMatcher", async ({ expect }) => {
+				const simulateMutation = () =>
+					delay(500).then(() => {
+						const element = document.createElement("div");
+						element.id = "late";
+						sandboxElement.append(element);
+					});
+
+				await simulateMutation();
+
+				const customMatcher = vi.fn((selector) => {
+					return document.evaluate(
+						selector,
+						document,
+						null,
+						XPathResult.FIRST_ORDERED_NODE_TYPE,
+						null,
+					).singleNodeValue as Element;
+				});
+
+				const [, result] = await Promise.all([
+					() => {
+						console.warn(
+							"FIXME: JSDOM is returning the same value as the XPath resolve return value, so dynamic detection cannot be tested. Want to change to browser mode.",
+						);
+					},
+					waitElement("//test-sandbox//div[@id='late']", {
+						customMatcher,
+					}),
+				]);
+
+				expect(result?.id).toEqual("late");
+				expect(customMatcher).toHaveBeenCalled();
 			});
 		});
 	});

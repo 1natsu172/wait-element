@@ -29,6 +29,15 @@ describe("mergeOptions", () => {
 			},
 			observeConfigs: { subtree: false, attributeFilter: ["class"] },
 			signal: AbortSignal.timeout(1000),
+			customMatcher: (selector) => {
+				return document.evaluate(
+					selector,
+					document,
+					null,
+					XPathResult.FIRST_ORDERED_NODE_TYPE,
+					null,
+				).singleNodeValue as Element;
+			},
 		} as const satisfies UserSideOptions;
 
 		const merged = mergeOptions(userSide, defaultSide);
@@ -44,6 +53,7 @@ describe("mergeOptions", () => {
 				attributeFilter: userSide.observeConfigs.attributeFilter,
 			},
 			signal: userSide.signal,
+			customMatcher: userSide.customMatcher,
 		});
 	});
 

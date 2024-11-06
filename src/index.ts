@@ -32,11 +32,17 @@ export function createWaitElement<
 		options?: UserSideOptions<Result, QuerySelectorResult>,
 	): Promise<Result> => {
 		// NOTE: defuはマージで優先した型へ絞り込んで返さずユニオン型で返すためキャストしている。`options?: UserSideOptions<Result,…>` のジェネリクスで実際には型は動的に解決されるため問題ない。
-		const { target, unifyProcess, observeConfigs, detector, signal } =
-			mergeOptions(options, defaultOptions) as unknown as Options<
-				Result,
-				QuerySelectorResult
-			>;
+		const {
+			target,
+			unifyProcess,
+			observeConfigs,
+			detector,
+			signal,
+			customMatcher,
+		} = mergeOptions(options, defaultOptions) as unknown as Options<
+			Result,
+			QuerySelectorResult
+		>;
 
 		const unifyPromiseKey = [
 			selector,
@@ -45,6 +51,7 @@ export function createWaitElement<
 			observeConfigs,
 			detector,
 			signal,
+			customMatcher,
 		];
 
 		const cachedPromise = unifyCache.get(unifyPromiseKey);
@@ -73,6 +80,7 @@ export function createWaitElement<
 								selector,
 								target: target,
 								detector: detector,
+								customMatcher,
 							});
 
 							if (detectResult.isDetected) {
@@ -99,6 +107,7 @@ export function createWaitElement<
 					selector,
 					target: target,
 					detector: detector,
+					customMatcher,
 				});
 
 				if (detectResult.isDetected) {
@@ -125,12 +134,16 @@ async function detectElement<
 	target,
 	selector,
 	detector,
+	customMatcher,
 }: {
 	target: Options<Result, QuerySelectorResult>["target"];
 	selector: string;
 	detector: Options<Result, QuerySelectorResult>["detector"];
+	customMatcher: Options<Result, QuerySelectorResult>["customMatcher"];
 }): Promise<DetectorResultType<Result>> {
-	const element = target.querySelector(selector) as QuerySelectorResult;
+	const element =
+		customMatcher?.(selector) ??
+		(target.querySelector(selector) as QuerySelectorResult);
 
 	return await detector(element);
 }

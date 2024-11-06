@@ -56,7 +56,7 @@ export interface Options<
 	 * @param selector string
 	 * @description Use a matcher other than querySelector
 	 */
-	customMatcher?: (selector: string) => QuerySelectorResult;
+	customMatcher: ((selector: string) => QuerySelectorResult) | undefined;
 }
 
 export type UserSideOptions<
@@ -86,6 +86,7 @@ export const getDefaultOptions = <
 		attributes: true,
 	},
 	signal: undefined,
+	customMatcher: undefined,
 });
 
 export const mergeOptions = <
