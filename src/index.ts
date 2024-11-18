@@ -141,9 +141,9 @@ async function detectElement<
 	detector: Options<Result, QuerySelectorResult>["detector"];
 	customMatcher: Options<Result, QuerySelectorResult>["customMatcher"];
 }): Promise<DetectorResultType<Result>> {
-	const element =
-		customMatcher?.(selector) ??
-		(target.querySelector(selector) as QuerySelectorResult);
+	const element = customMatcher
+		? customMatcher(selector)
+		: (target.querySelector(selector) as QuerySelectorResult);
 
 	return await detector(element);
 }
