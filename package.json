@@ -1,7 +1,7 @@
 {
 	"name": "@1natsu/wait-element",
 	"description": "Detect the appearance of an element in the browser DOM",
-	"version": "4.1.1",
+	"version": "4.1.2",
 	"publishConfig": {
 		"access": "public"
 	},
