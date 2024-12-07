@@ -77,7 +77,7 @@ export type DefaultOptions<QuerySelectorResult extends QuerySelectorReturn> =
 export const getDefaultOptions = <
 	QuerySelectorResult extends QuerySelectorReturn = QuerySelectorReturn,
 >(): DefaultOptions<QuerySelectorResult> => ({
-	target: document,
+	target: globalThis.document,
 	unifyProcess: true,
 	detector: isExist,
 	observeConfigs: {
