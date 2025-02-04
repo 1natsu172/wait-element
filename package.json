@@ -63,7 +63,7 @@
 		"jsdom": "25.0.1",
 		"typescript": "5.7.3",
 		"unbuild": "2.0.0",
-		"vitest": "2.1.8"
+		"vitest": "2.1.9"
 	},
 	"scripts": {
 		"test": "vitest",
