@@ -62,7 +62,7 @@
 		"@vitest/ui": "3.0.7",
 		"jsdom": "26.0.0",
 		"typescript": "5.8.2",
-		"unbuild": "3.3.1",
+		"unbuild": "3.5.0",
 		"vitest": "3.0.7"
 	},
 	"scripts": {
