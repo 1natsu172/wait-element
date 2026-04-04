@@ -61,7 +61,7 @@
 		"@vitest/coverage-v8": "4.1.2",
 		"@vitest/ui": "4.1.2",
 		"jsdom": "29.0.1",
-		"typescript": "5.9.3",
+		"typescript": "6.0.2",
 		"unbuild": "3.6.1",
 		"vitest": "4.1.2"
 	},
@@ -70,6 +70,7 @@
 		"test-ci": "vitest run",
 		"coverage": "vitest --coverage --ui",
 		"biome": "biome check --write ./src",
+		"typecheck": "tsc --noEmit",
 		"build": "unbuild",
 		"prerelease": "unbuild",
 		"release": "pnpm dlx np --test-script=test-ci"

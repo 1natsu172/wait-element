@@ -22,6 +22,8 @@ jobs:
           cache: pnpm
       - name: Install deps
         run: pnpm install
+      - name: Check to typecheck passed
+        run: pnpm run typecheck
       - name: Check to build passed
         run: pnpm run build
       - name: Check to test passed
