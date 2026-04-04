@@ -2,11 +2,11 @@ import ManyKeysMap from "many-keys-map";
 
 import type { DetectorResultType } from "./detectors.js";
 import {
+	getDefaultOptions,
 	type InstanceOptions,
+	mergeOptions,
 	type Options,
 	type UserSideOptions,
-	getDefaultOptions,
-	mergeOptions,
 } from "./options";
 import type { QuerySelectorReturn } from "./types.js";
 

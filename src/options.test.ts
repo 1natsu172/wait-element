@@ -1,12 +1,12 @@
 import { assert, describe, test } from "vitest";
 import {
-	type UserSideOptions,
 	getDefaultOptions,
 	mergeOptions,
+	type UserSideOptions,
 } from "./options";
 
 describe("defaultOptions", () => {
-	test("should return always the same options", (t) => {
+	test("should return always the same options", () => {
 		const options1 = getDefaultOptions();
 		const options2 = getDefaultOptions();
 		assert.deepEqual(options1, options2);
