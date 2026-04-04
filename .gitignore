@@ -6,3 +6,6 @@ yarn.lock
 
 dist
 coverage
+
+# Claude Code
+.claude/settings.local.json
