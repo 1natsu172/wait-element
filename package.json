@@ -70,6 +70,7 @@
 		"test-ci": "vitest run",
 		"coverage": "vitest --coverage --ui",
 		"biome": "biome check --write ./src",
+		"typecheck": "tsc --noEmit",
 		"build": "unbuild",
 		"prerelease": "unbuild",
 		"release": "pnpm dlx np --test-script=test-ci"
