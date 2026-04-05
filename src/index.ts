@@ -10,7 +10,7 @@ import {
 } from "./options";
 import type { QuerySelectorReturn } from "./types.js";
 
-const unifyCache = new ManyKeysMap<unknown, Promise<unknown>>();
+const unifyCache = new ManyKeysMap<readonly unknown[], Promise<unknown>>();
 
 export function createWaitElement<
 	Instance_Result = unknown,
