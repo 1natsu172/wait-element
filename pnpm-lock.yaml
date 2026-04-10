@@ -28,8 +28,8 @@ importers:
         specifier: 4.1.2
         version: 4.1.2(vitest@4.1.2)
       jsdom:
-        specifier: 29.0.1
-        version: 29.0.1
+        specifier: 29.0.2
+        version: 29.0.2
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -38,7 +38,7 @@ importers:
         version: 3.6.1(typescript@6.0.2)
       vitest:
         specifier: 4.1.2
-        version: 4.1.2(@types/node@22.15.17)(@vitest/ui@4.1.2)(jsdom@29.0.1)(vite@6.3.5(@types/node@22.15.17)(jiti@2.5.1))
+        version: 4.1.2(@types/node@22.15.17)(@vitest/ui@4.1.2)(jsdom@29.0.2)(vite@6.3.5(@types/node@22.15.17)(jiti@2.5.1))
 
 packages:
 
@@ -879,8 +879,8 @@ packages:
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
-  jsdom@29.0.1:
-    resolution: {integrity: sha512-z6JOK5gRO7aMybVq/y/MlIpKh8JIi68FBKMUtKkK2KH/wMSRlCxQ682d08LB9fYXplyY/UXG8P4XXTScmdjApg==}
+  jsdom@29.0.2:
+    resolution: {integrity: sha512-9VnGEBosc/ZpwyOsJBCQ/3I5p7Q5ngOY14a9bf5btenAORmZfDse1ZEheMiWcJ3h81+Fv7HmJFdS0szo/waF2w==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
     peerDependencies:
       canvas: ^3.0.0
@@ -1792,7 +1792,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.2(@types/node@22.15.17)(@vitest/ui@4.1.2)(jsdom@29.0.1)(vite@6.3.5(@types/node@22.15.17)(jiti@2.5.1))
+      vitest: 4.1.2(@types/node@22.15.17)(@vitest/ui@4.1.2)(jsdom@29.0.2)(vite@6.3.5(@types/node@22.15.17)(jiti@2.5.1))
 
   '@vitest/expect@4.1.2':
     dependencies:
@@ -1838,7 +1838,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
-      vitest: 4.1.2(@types/node@22.15.17)(@vitest/ui@4.1.2)(jsdom@29.0.1)(vite@6.3.5(@types/node@22.15.17)(jiti@2.5.1))
+      vitest: 4.1.2(@types/node@22.15.17)(@vitest/ui@4.1.2)(jsdom@29.0.2)(vite@6.3.5(@types/node@22.15.17)(jiti@2.5.1))
 
   '@vitest/utils@4.1.2':
     dependencies:
@@ -2136,7 +2136,7 @@ snapshots:
   js-tokens@4.0.0:
     optional: true
 
-  jsdom@29.0.1:
+  jsdom@29.0.2:
     dependencies:
       '@asamuzakjp/css-color': 5.1.5
       '@asamuzakjp/dom-selector': 7.0.6
@@ -2625,7 +2625,7 @@ snapshots:
       fsevents: 2.3.3
       jiti: 2.5.1
 
-  vitest@4.1.2(@types/node@22.15.17)(@vitest/ui@4.1.2)(jsdom@29.0.1)(vite@6.3.5(@types/node@22.15.17)(jiti@2.5.1)):
+  vitest@4.1.2(@types/node@22.15.17)(@vitest/ui@4.1.2)(jsdom@29.0.2)(vite@6.3.5(@types/node@22.15.17)(jiti@2.5.1)):
     dependencies:
       '@vitest/expect': 4.1.2
       '@vitest/mocker': 4.1.2(vite@6.3.5(@types/node@22.15.17)(jiti@2.5.1))
@@ -2650,7 +2650,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.17
       '@vitest/ui': 4.1.2(vitest@4.1.2)
-      jsdom: 29.0.1
+      jsdom: 29.0.2
     transitivePeerDependencies:
       - msw
 
