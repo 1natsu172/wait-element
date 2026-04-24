@@ -61,7 +61,7 @@
 		"@vitest/coverage-v8": "4.1.4",
 		"@vitest/ui": "4.1.4",
 		"jsdom": "29.0.2",
-		"typescript": "6.0.2",
+		"typescript": "6.0.3",
 		"unbuild": "3.6.1",
 		"vitest": "4.1.4"
 	},
