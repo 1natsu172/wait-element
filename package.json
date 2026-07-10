@@ -58,12 +58,12 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.5.2",
 		"@types/jsdom": "28.0.3",
-		"@vitest/coverage-v8": "4.1.9",
-		"@vitest/ui": "4.1.9",
+		"@vitest/coverage-v8": "4.1.10",
+		"@vitest/ui": "4.1.10",
 		"jsdom": "29.1.1",
 		"typescript": "6.0.3",
 		"unbuild": "3.6.1",
-		"vitest": "4.1.9"
+		"vitest": "4.1.10"
 	},
 	"scripts": {
 		"test": "vitest",
