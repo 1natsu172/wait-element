@@ -56,7 +56,7 @@
 		"many-keys-map": "^3.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.10",
+		"@biomejs/biome": "2.5.11",
 		"@types/jsdom": "28.0.3",
 		"@vitest/coverage-v8": "4.1.11",
 		"@vitest/ui": "4.1.11",
