@@ -385,10 +385,11 @@ describe.shuffle("waitElement", () => {
 					value: "Tiger",
 				});
 
-				assert.strictEqual(resultMonkey.status, "rejected");
-				// @ts-expect-error missing type infer
-				assert.strictEqual(resultMonkey.reason.constructor.name, "DOMException");
-				// @ts-expect-error missing type infer
+				assert(resultMonkey.status === "rejected");
+				assert.strictEqual(
+					resultMonkey.reason.constructor.name,
+					"DOMException",
+				);
 				assert.strictEqual(resultMonkey.reason.name, "TimeoutError");
 			});
 
