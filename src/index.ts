@@ -101,6 +101,9 @@ export function createWaitElement<
 					{ once: true },
 				);
 
+				// Start observe before the initial check so that mutations made while it awaits are not missed.
+				observer.observe(target, observeConfigs);
+
 				// Checking already element existed.
 				const detectResult = await detectElement({
 					selector,
@@ -110,11 +113,9 @@ export function createWaitElement<
 				});
 
 				if (detectResult.isDetected) {
+					observer.disconnect();
 					return resolve(detectResult.result);
 				}
-
-				// Start observe.
-				observer.observe(target, observeConfigs);
 			},
 		).finally(() => {
 			unifyCache.delete(unifyPromiseKey);

@@ -78,6 +78,89 @@ describe.shuffle("waitElement", () => {
 			expect(checkElement?.id).toEqual("exist");
 		});
 
+		test("should detect an element appended by a microtask queued before the call", async ({
+			expect,
+		}) => {
+			const element = document.createElement("div");
+			element.id = "microtask";
+			Promise.resolve().then(() => sandboxElement.append(element));
+
+			const result = await Promise.race([
+				waitElement("#microtask"),
+				delay(500).then(() => "pending"),
+			]);
+
+			expect(result).toBe(element);
+		});
+
+		test("should detect an element appended while the initial detector is awaiting", async ({
+			expect,
+		}) => {
+			const element = document.createElement("div");
+			element.id = "during-initial-check";
+
+			const waiting = waitElement("#during-initial-check", {
+				detector: async (element) => {
+					await delay(50);
+					return element
+						? { isDetected: true, result: element }
+						: { isDetected: false };
+				},
+			});
+			delay(10).then(() => sandboxElement.append(element));
+
+			const result = await Promise.race([
+				waiting,
+				delay(500).then(() => "pending"),
+			]);
+
+			expect(result).toBe(element);
+		});
+
+		test("should settle once when an observer callback detects before the initial check finishes", async ({
+			expect,
+		}) => {
+			const observeSpy = vi.spyOn(MutationObserver.prototype, "observe");
+			const disconnectSpy = vi.spyOn(MutationObserver.prototype, "disconnect");
+			const calls: string[] = [];
+			const element = document.createElement("div");
+			element.id = "race";
+
+			const waiting = waitElement("#race", {
+				// The initial check (no element yet) takes longer than the check run by the observer callback.
+				detector: async (element) => {
+					const label = element ? "found" : "null";
+					calls.push(`start:${label}`);
+					await delay(element ? 10 : 80);
+					calls.push(`end:${label}`);
+					return element
+						? { isDetected: true, result: element }
+						: { isDetected: false };
+				},
+			});
+			await delay(5);
+			sandboxElement.append(element);
+
+			const result = await Promise.race([
+				waiting,
+				delay(500).then(() => "pending"),
+			]);
+
+			expect(result).toBe(element);
+			expect(calls).not.toContain("end:null");
+
+			// Let the initial check finish after the promise has settled.
+			await delay(150);
+			expect(calls).toEqual([
+				"start:null",
+				"start:found",
+				"end:found",
+				"end:null",
+			]);
+			expect(observeSpy).toHaveBeenCalledTimes(1);
+			expect(disconnectSpy).toHaveBeenCalledTimes(1);
+		});
+
 		test("should detect the target element by delayed add class name", async ({
 			expect,
 		}) => {
@@ -194,6 +277,44 @@ describe.shuffle("waitElement", () => {
 			assert.strictEqual(result2.status, "fulfilled");
 			// @ts-expect-error missing type infer
 			assert.strictEqual(result2.value.id, "late");
+		});
+
+		test("should not resume observing when aborted while the initial check is awaiting", async ({
+			expect,
+		}) => {
+			const observerCalls: string[] = [];
+			const originalObserve = MutationObserver.prototype.observe;
+			const originalDisconnect = MutationObserver.prototype.disconnect;
+			vi.spyOn(MutationObserver.prototype, "observe").mockImplementation(
+				function (this: MutationObserver, ...args) {
+					observerCalls.push("observe");
+					return originalObserve.apply(this, args);
+				},
+			);
+			vi.spyOn(MutationObserver.prototype, "disconnect").mockImplementation(
+				function (this: MutationObserver) {
+					observerCalls.push("disconnect");
+					return originalDisconnect.apply(this);
+				},
+			);
+			const detector = vi.fn(async () => {
+				await delay(80);
+				return { isDetected: false } as const;
+			});
+			const ac = new AbortController();
+
+			const waiting = waitElement("#aborted-while-initial-check", {
+				detector,
+				signal: ac.signal,
+			});
+			await delay(5);
+			ac.abort("abort while initial check");
+
+			await expect(waiting).rejects.toBe("abort while initial check");
+
+			// Let the initial check finish after the abort.
+			await delay(150);
+			expect(observerCalls).toEqual(["observe", "disconnect"]);
 		});
 
 		test("should reject if already signal aborted", async () => {
