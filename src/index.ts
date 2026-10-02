@@ -69,25 +69,24 @@ export function createWaitElement<
 				}
 
 				const observer: MutationObserver = new MutationObserver(
-					async (mutations) => {
-						for (const _ of mutations) {
-							if (signal?.aborted) {
-								observer.disconnect();
-								break;
-							}
+					// Detection reads the live DOM rather than individual records, so one
+					// check per batch is enough no matter how many records it contains.
+					async () => {
+						if (signal?.aborted) {
+							observer.disconnect();
+							return;
+						}
 
-							const detectResult = await detectElement({
-								selector,
-								target: target,
-								detector: detector,
-								customMatcher,
-							});
+						const detectResult = await detectElement({
+							selector,
+							target: target,
+							detector: detector,
+							customMatcher,
+						});
 
-							if (detectResult.isDetected) {
-								observer.disconnect();
-								resolve(detectResult.result);
-								break;
-							}
+						if (detectResult.isDetected) {
+							observer.disconnect();
+							resolve(detectResult.result);
 						}
 					},
 				);

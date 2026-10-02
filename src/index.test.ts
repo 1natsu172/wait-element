@@ -323,6 +323,32 @@ describe.shuffle("waitElement", () => {
 		});
 
 		describe("customMatcher", () => {
+			test("should query once per mutation batch, not once per record", async ({
+				expect,
+			}) => {
+				const customMatcher = vi.fn((selector: string) =>
+					document.querySelector(selector),
+				);
+				const waiting = waitElement("#batched", { customMatcher });
+				await delay(0);
+				customMatcher.mockClear();
+
+				const noise = document.createElement("div");
+				sandboxElement.append(noise);
+				for (let i = 0; i < 50; i++) {
+					noise.setAttribute("data-i", String(i));
+				}
+				await delay(0);
+				expect(customMatcher).toHaveBeenCalledTimes(1);
+
+				const element = document.createElement("div");
+				element.id = "batched";
+				sandboxElement.append(element);
+
+				expect(await waiting).toBe(element);
+				expect(customMatcher).toHaveBeenCalledTimes(2);
+			});
+
 			test("should get the element via customMatcher", async ({ expect }) => {
 				const simulateMutation = () =>
 					delay(500).then(() => {
