@@ -22,6 +22,8 @@ jobs:
           cache: pnpm
       - name: Install deps
         run: pnpm install
+      - name: Check to lint and format passed
+        run: pnpm exec biome ci ./src
       - name: Check to typecheck passed
         run: pnpm run typecheck
       - name: Check to build passed
