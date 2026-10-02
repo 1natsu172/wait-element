@@ -3,7 +3,8 @@
 	"description": "Detect the appearance of an element in the browser DOM",
 	"version": "4.2.0",
 	"publishConfig": {
-		"access": "public"
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
 	},
 	"license": "MIT",
 	"author": "1natsu",
