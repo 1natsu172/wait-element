@@ -1,3 +1,7 @@
 allowBuilds:
   # esbuild の postinstall はバイナリの検証と最適化だけで、なくても動作する
   esbuild: false
+
+# 公開から7日（分単位）経っていない版を解決しない。Renovate の lock file maintenance
+# もこの設定を読むため、ローカルのグローバル設定と同じ値をリポジトリにも置く
+minimumReleaseAge: 10080

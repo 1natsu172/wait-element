@@ -19,6 +19,14 @@
 	],
 	"packageRules": [
 		{
+			// pnpm-workspace.yaml の minimumReleaseAge（7日）に揃える。best-practices の既定は3日で、
+			// 3〜7日の版を提案すると pnpm が lock の解決を拒否する
+			"matchDatasources": [
+				"npm"
+			],
+			"minimumReleaseAge": "7 days"
+		},
+		{
 			"matchUpdateTypes": [
 				"minor",
 				"patch",
