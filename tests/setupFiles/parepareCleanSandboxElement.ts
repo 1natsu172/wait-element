@@ -7,10 +7,8 @@
 
 /**
  * @description
- * Tests for DOM elements must always be tested against the `sandboxElement`. This is because the global DOM (JSDom) is common between tests, causing DOM elements to conflict.
- * Cleaning the custom element each tests in `beforeEach` is a workaround to avoid this problem.
- *
- * refs: https://github.com/vitest-dev/vitest/issues/5919
+ * Tests for DOM elements must always be tested against the `sandboxElement`. In browser mode, the tests in a file run on one shared document, so elements left by one test would be found by the selectors of another.
+ * Recreating the sandbox element in `beforeEach` gives each test an empty subtree to work in.
  */
 // const prepareCleanSandbox: SuiteHooks["beforeEach"][number] = (context) => {
 // 	const TEST_SANDBOX = "test-sandbox";

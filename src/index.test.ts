@@ -1,15 +1,15 @@
-import { setTimeout as delay } from "node:timers/promises";
 import { assert, beforeEach, describe, test, vi } from "vitest";
 import { waitElement } from "./index";
+
+const delay = (ms: number) =>
+	new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 const TEST_SANDBOX = "test-sandbox";
 
 /**
  * @description
- * Tests for DOM elements must always be tested against the `sandboxElement`. This is because the global DOM (JSDom) is common between tests, causing DOM elements to conflict.
- * Cleaning the custom element each tests in `beforeEach` is a workaround to avoid this problem.
- *
- * refs: https://github.com/vitest-dev/vitest/issues/5919
+ * Tests for DOM elements must always be tested against the `sandboxElement`. In browser mode, the tests in a file run on one shared document, so elements left by one test would be found by the selectors of another.
+ * Recreating the sandbox element in `beforeEach` gives each test an empty subtree to work in.
  */
 describe.shuffle("waitElement", () => {
 	let sandboxElement = document.createElement(TEST_SANDBOX);
@@ -403,7 +403,9 @@ describe.shuffle("waitElement", () => {
 					detector: async (element) => {
 						return {
 							isDetected: true,
-							result: await delay(100, `${element?.textContent} awaitable!`),
+							result: await delay(100).then(
+								() => `${element?.textContent} awaitable!`,
+							),
 						};
 					},
 				});
