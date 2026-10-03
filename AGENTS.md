@@ -37,9 +37,12 @@ This file provides guidance to AI coding agents when working with code in this r
 
 ## Testing
 
-- **環境**: jsdom（vitest.config.tsで設定）
+- **環境**: Vitest browser mode（Playwright provider）で Chromium / Firefox / WebKit の実ブラウザ上で全テストを実行する（vitest.config.tsで設定）。MutationObserverのレコード配信やマイクロタスクの実行タイミングはエンジンごとに差があり得るため、3エンジンすべてで通すことを前提にする
+- **ブラウザの準備**: 初回は `pnpm exec playwright install chromium firefox webkit` でブラウザを取得する
+- **特定エンジンだけ実行**: `pnpm vitest run --project chromium`
+- **Node専用APIを使わない**: テストはブラウザで動くため、`node:*` モジュール（`node:timers/promises` 等）はimportできない。待機は `src/index.test.ts` のローカル `delay` を使う
 - **型テスト**: `*.test-d.ts`ファイルで`expectTypeOf`を使用（vitest typecheck有効）
-- **DOMテストの注意**: jsdomはテスト間でグローバルDOMを共有するため、各テストでサンドボックス要素(`test-sandbox`)をbeforeEachでクリーン・再生成している（`describe.shuffle`で順序非依存を保証）
+- **DOMテストの注意**: browser modeはテストファイルごとに別のiframeで実行するため、ファイルをまたいだDOMやグローバル変数の衝突は起きない。一方で同じファイル内のテストは1つのdocumentを共有するため、各テストでサンドボックス要素(`test-sandbox`)をbeforeEachでクリーン・再生成している（`describe.shuffle`で順序非依存を保証）
 - テストタイムアウトは50秒に設定
 
 ## Code Style
