@@ -1,15 +1,15 @@
-import { setTimeout as delay } from "node:timers/promises";
 import { assert, beforeEach, describe, test, vi } from "vitest";
 import { waitElement } from "./index";
+
+const delay = (ms: number) =>
+	new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 const TEST_SANDBOX = "test-sandbox";
 
 /**
  * @description
- * Tests for DOM elements must always be tested against the `sandboxElement`. This is because the global DOM (JSDom) is common between tests, causing DOM elements to conflict.
- * Cleaning the custom element each tests in `beforeEach` is a workaround to avoid this problem.
- *
- * refs: https://github.com/vitest-dev/vitest/issues/5919
+ * Tests for DOM elements must always be tested against the `sandboxElement`. In browser mode, the tests in a file run on one shared document, so elements left by one test would be found by the selectors of another.
+ * Recreating the sandbox element in `beforeEach` gives each test an empty subtree to work in.
  */
 describe.shuffle("waitElement", () => {
 	let sandboxElement = document.createElement(TEST_SANDBOX);
@@ -403,7 +403,9 @@ describe.shuffle("waitElement", () => {
 					detector: async (element) => {
 						return {
 							isDetected: true,
-							result: await delay(100, `${element?.textContent} awaitable!`),
+							result: await delay(100).then(
+								() => `${element?.textContent} awaitable!`,
+							),
 						};
 					},
 				});
@@ -471,39 +473,38 @@ describe.shuffle("waitElement", () => {
 				expect(customMatcher).toHaveBeenCalledTimes(2);
 			});
 
-			test("should get the element via customMatcher", async ({ expect }) => {
+			test("should detect the appearance of an element via customMatcher", async ({
+				expect,
+			}) => {
+				const element = document.createElement("div");
+				element.id = "late";
+
 				const simulateMutation = () =>
 					delay(500).then(() => {
-						const element = document.createElement("div");
-						element.id = "late";
 						sandboxElement.append(element);
 					});
 
-				await simulateMutation();
-
-				const customMatcher = vi.fn((selector) => {
+				const customMatcher = vi.fn((selector: string) => {
 					return document.evaluate(
 						selector,
 						document,
 						null,
 						XPathResult.FIRST_ORDERED_NODE_TYPE,
 						null,
-					).singleNodeValue as Element;
+					).singleNodeValue as Element | null;
 				});
 
 				const [, result] = await Promise.all([
-					() => {
-						console.warn(
-							"FIXME: JSDOM is returning the same value as the XPath resolve return value, so dynamic detection cannot be tested. Want to change to browser mode.",
-						);
-					},
+					simulateMutation(),
 					waitElement("//test-sandbox//div[@id='late']", {
 						customMatcher,
 					}),
 				]);
 
-				expect(result?.id).toEqual("late");
-				expect(customMatcher).toHaveBeenCalled();
+				expect(result).toBe(element);
+				// The initial check finds nothing; a later check run by the observer finds the element.
+				expect(customMatcher.mock.results[0]?.value).toBeNull();
+				expect(customMatcher.mock.results.at(-1)?.value).toBe(element);
 			});
 		});
 	});

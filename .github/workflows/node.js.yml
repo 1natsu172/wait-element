@@ -28,5 +28,7 @@ jobs:
         run: pnpm run typecheck
       - name: Check to build passed
         run: pnpm run build
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
       - name: Check to test passed
         run: pnpm run test
