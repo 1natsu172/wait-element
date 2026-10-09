@@ -57,7 +57,7 @@
 		"many-keys-map": "^3.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.14",
+		"@biomejs/biome": "2.5.15",
 		"@vitest/browser-playwright": "5.0.2",
 		"@vitest/coverage-v8": "5.0.2",
 		"@vitest/ui": "5.0.2",
