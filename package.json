@@ -76,5 +76,5 @@
 		"prerelease": "unbuild",
 		"release": "pnpm dlx np --test-script=test-ci"
 	},
-	"packageManager": "pnpm@12.8.1"
+	"packageManager": "pnpm@12.9.0"
 }
