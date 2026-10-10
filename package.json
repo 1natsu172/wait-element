@@ -58,13 +58,13 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.15",
-		"@vitest/browser-playwright": "5.0.2",
-		"@vitest/coverage-v8": "5.0.2",
-		"@vitest/ui": "5.0.2",
+		"@vitest/browser-playwright": "5.0.3",
+		"@vitest/coverage-v8": "5.0.3",
+		"@vitest/ui": "5.0.3",
 		"playwright": "1.63.0",
 		"typescript": "6.0.3",
 		"unbuild": "3.6.1",
-		"vitest": "5.0.2"
+		"vitest": "5.0.3"
 	},
 	"scripts": {
 		"test": "vitest",
