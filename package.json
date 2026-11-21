@@ -61,7 +61,7 @@
 		"@vitest/browser-playwright": "5.1.0",
 		"@vitest/coverage-v8": "5.1.0",
 		"@vitest/ui": "5.1.0",
-		"playwright": "1.65.0",
+		"playwright": "1.65.1",
 		"typescript": "6.0.3",
 		"unbuild": "3.6.1",
 		"vitest": "5.1.0"
